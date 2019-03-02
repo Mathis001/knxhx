@@ -12,6 +12,102 @@ sanity_picklefile = './sanity_potholes.pickles'
 geocoding_api_key = 'AIzaSyDbZWg9g0t3QIuZAyz5azDuXUxx6vDV7fg'
 maps_geocode_url = 'https://maps.googleapis.com/maps/api/geocode/json'
 
+class PotholeLocation:
+    COUNTY_RE = re.compile('Knox County', re.IGNORECASE)
+    STATE_RE = re.compile('TN', re.IGNORECASE)
+
+    def __init__(self, place_id, lat, lng, format_addr, addr_comp):
+        self.place_id = place_id
+        self.lat = lat
+        self.lng = lng
+        self.format_addr = format_addr
+        self.addr_comp = addr_comp
+
+    @classmethod
+    def make_latlng(cls, lat, lng):
+        payload = {'latlng': '{},{}'.format(lat, lng),
+                   'result_type': 'street_address',
+                   'location_type': 'ROOFTOP',
+                   'key': geocoding_api_key,
+                  }
+        goog_data = requests.get(maps_geocode_url, params=payload)
+        data = goog_data.json()
+        if data['status'] != 'OK':
+            print('status is not OK: {}'.format(data['status']))
+            return None
+        if len(data['results']) < 1:
+            print('got no results')
+            return None
+        result = data['results'][0]
+        return cls(result['place_id'],
+                   result['geometry']['location']['lat'],
+                   result['geometry']['location']['lng'],
+                   result['formatted_address'],
+                   result['address_components'])
+
+    @classmethod
+    def make_addr(cls, address, append_loc):
+        if append_loc is not None:
+            address = '{}, {}'.format(address, append_loc)
+        payload = {'address': address,
+                   'region': 'us',
+                   'result_type': 'street_address',
+                   'location_type': 'ROOFTOP',
+                   'key': geocoding_api_key,
+                  }
+        goog_data = requests.get(maps_geocode_url, params=payload)
+        data = goog_data.json()
+        if data['status'] != 'OK':
+            print('status is not OK: {}'.format(data['status']))
+            return None
+        if len(data['results']) < 1:
+            print('got no results')
+            return None
+        winning_result = None
+        if len(data['results']) == 1:
+            winning_result = data['results'][0]
+        else:
+            for res in data['results']:
+                valid_loc = PotholeLocation.validate_loc_type(res)
+                valid_cty = PotholeLocation.validate_county(res)
+                if valid_loc and valid_cty:
+                       winning_result = res
+                       break
+        if winning_result is None:
+            print('no valid results')
+            return None
+        return cls(result['place_id'],
+                result['geometry']['location']['lat'],
+                result['geometry']['location']['lng'],
+                result['formatted_address'],
+                result['address_components'])
+
+    @staticmethod
+    def validate_loc_type(res):
+        valid = True
+        try:
+            if res['geometry']['location_type'] != 'ROOFTOP':
+                valid = False
+        except KeyError:
+            valid = False
+        return valid
+
+    @staticmethod
+    def validate_county(res):
+        valid = True
+        try:
+            county = res['address_components'][4]['long_name']
+            state = res['address_components'][5]['short_name']
+            if COUNTY_RE.match(county) is None:
+                valid = False
+            elif STATE_RE.match(state) is None:
+                valid = False
+        except KeyError:
+            valid = False
+        return valid
+
+
+
 class PotholeWorkorder:
     date_re = re.compile('(\d+)/(\d+)/(\d+)')
     city_text = 'knoxville, tn'
@@ -193,3 +289,11 @@ for wo in sanity_wo:
 print('========================================================================')
 for wo in sanity_wo:
     wo.pretty_print()
+
+testpl = PotholeLocation.make_latlng('35.9625505', '-83.9161831')
+print(testpl.place_id)
+print(testpl.lat)
+print(testpl.lng)
+print(testpl.format_addr)
+print(testpl.addr_comp)
+
