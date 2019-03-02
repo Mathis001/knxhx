@@ -1,1 +1,17 @@
 /* You can add global styles to this file, and also import other style files */
+
+@import "./material.css";
+@import '~bootstrap/dist/css/bootstrap.min.css';
+@import 'src/app/cerulean.min.css';
+
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6, .a {
+	color: #2fa4e7 !important;
+}
+
+body { 
+    padding-left: calc(100vw - 100%);
+}
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}

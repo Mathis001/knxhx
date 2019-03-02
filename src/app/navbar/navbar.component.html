@@ -1,0 +1,38 @@
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar" (click)="toggleState()">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" routerLink="/">Key Server</a>
+    </div>
+
+    <div id="navbar" class="collapse navbar-collapse" [ngClass]="{ 'in': isIn }">
+      <ul class="nav navbar-nav">
+        
+        <li (click)="toggleState()">
+          <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
+        </li>
+
+        <li (click)="toggleState()">
+          <a routerLink="/report" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Report</a>
+        </li>
+
+        <li *ngIf="supportAuth" (click)="toggleState()">
+          <a routerLink="/jobs" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Jobs</a>
+        </li>
+
+        <li *ngIf="adminAuth" (click)="toggleState()">
+          <a routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Admin</a>
+        </li>
+
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div>
+</nav>
+
+<div class="spacer"></div>

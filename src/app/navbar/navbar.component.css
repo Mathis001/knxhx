@@ -1,0 +1,7 @@
+.spacer {
+	margin-bottom: 50px;
+}
+
+nav { 
+    padding-left: calc(100vw - 100%);
+}
