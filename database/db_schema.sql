@@ -77,3 +77,22 @@ CREATE TABLE IF NOT EXISTS `workorders` (
 	`request_id` INT NOT NULL,
 	`w_o` VARCHAR(255) NOT NULL,
 	);
+
+/*CREATE TABLE authlvl*/
+CREATE TABLE IF NOT EXISTS `authlvl` (
+	`id` INT NOT NULL AUTO_INCREMENT,
+	`auth_name` VARCHAR(255) NOT NULL,
+	PRIMARY KEY (`id`),
+
+	);
+
+/*CREATE TABLE user*/
+CREATE TABLE IF NOT EXISTS `user` (
+	`id` INT NOT NULL AUTO_INCREMENT,
+	`name` VARCHAR(255) NOT NULL,
+	`password` VARCHAR(255) NOT NULL,
+	`api_token` VARCHAR(255) NOT NULL,
+	`auth` INT NOT NULL,
+	PRIMARY KEY (`id`),
+	FOREIGN KEY (`auth`) REFERENCES authlvl(`id`),
+	);
