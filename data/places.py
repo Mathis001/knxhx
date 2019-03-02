@@ -31,6 +31,10 @@ class PotholeWorkorder:
         self.priority = priority
         self.good_addr = None
         self.place_id = None
+        self.lat = None
+        self.lng = None
+        self.format_addr = None
+        self.addr_comp = None
 
     def get_geocode(self):
         payload = {'address': self.text_addr,
@@ -119,6 +123,10 @@ def sanitize_locs(wos):
             else:
                 wo.good_addr = True
                 wo.place_id = data['place_id']
+                wo.lat = data['geometry']['location']['lat']
+                wo.lat = data['geometry']['location']['lng']
+                wo.format_addr = data['formatted_address']
+                wo.addr_comp = data['address_components']
         elif len(wo.data['results']) > 1:
             valid_res = None
             for res in wo.data['results']:
@@ -140,6 +148,10 @@ def sanitize_locs(wos):
                 wo.good_addr = True
                 wo.data = {'results': valid_res}
                 wo.place_id = valid_res['place_id']
+                wo.lat = data['geometry']['location']['lat']
+                wo.lat = data['geometry']['location']['lng']
+                wo.format_addr = data['formatted_address']
+                wo.addr_comp = data['address_components']
 
 #get_online_data()
 
@@ -149,3 +161,6 @@ sanitize_locs(priority_wo)
 print('========================================================================')
 for wo in priority_wo:
     print('{}: {}'.format(wo.text_addr, wo.place_id))
+print('========================================================================')
+for wo in priority_wo:
+    print(wo)
