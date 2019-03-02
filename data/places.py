@@ -8,7 +8,6 @@ import pickle
 
 csvfile = './open_potholes.csv'
 picklefile = './potholeworkoders.pickles'
-updatedpicklefile = './updatedpotholeworkoders.pickles'
 geocoding_api_key = 'AIzaSyDbZWg9g0t3QIuZAyz5azDuXUxx6vDV7fg'
 maps_geocode_url = 'https://maps.googleapis.com/maps/api/geocode/json'
 
@@ -30,6 +29,7 @@ class PotholeWorkorder:
         self.zone = zone
         self.reporter = reporter
         self.priority = priority
+        self.good_addr = None
         self.place_id = None
 
     def get_geocode(self):
