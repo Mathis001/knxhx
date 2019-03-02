@@ -1,0 +1,1348 @@
+openapi: 3.0.1
+info:
+  description: This is the Keyserver's API documentiation
+  version: "1.0.0"
+  title: Keyserver API
+servers:
+  - url: /api/v1
+paths:
+
+  /app/admin/config/post:
+    post:
+      operationId: admin.config_post
+      tags:
+        - Post
+        - App
+      summary: Add new Config Property
+      description: >-
+        Add new Config Property: Add model, status, contract, 
+        legacy_hw_contract, legacy_sw_contract, contract_duration, 
+        feature, additional_hardwar, seller, customer
+      responses:
+        '201':
+          description: Successfully created person in list
+      requestBody:
+        description: Edit Config Properties
+        required: true
+        content:
+          application/json:
+            schema:
+              required:
+                - edit
+                - name
+              type: object
+              properties:
+                edit:
+                  type: string
+                  description: >-
+                    The table should we edit: [models, status, contracts, 
+                    legacy_hw_contracts, legacy_sw_contracts, contract_durations, 
+                    features, additional_hardware, sellers, customers]
+                name:
+                  type: string
+                  description: 'The name for the new item'
+  /app/admin/config/put:
+    put:
+      operationId: admin.config_put
+      tags:
+        - Post
+        - App
+      summary: Edit Config Properties
+      description: >-
+        Edit Config Properties: Enalbe or disable model, status, contract, 
+        legacy_hw_contract, legacy_sw_contract, contract_duration, 
+        feature, additional_hardwar, seller, customer
+      responses:
+        '201':
+          description: Successfully created person in list
+      requestBody:
+        description: Edit Config Properties
+        required: true
+        content:
+          application/json:
+            schema:
+              required:
+                - edit
+                - id
+              type: object
+              properties:
+                edit:
+                  type: string
+                  description: >-
+                    The table should we edit: [models, status, contracts, 
+                    legacy_hw_contracts, legacy_sw_contracts, contract_durations, 
+                    features, additional_hardware, sellers, customers]
+                id:
+                  type: integer
+                  description: 'The id of the item to update'
+                name:
+                  type: string
+                  description: 'The new name for the item with the id'
+                active:
+                  type: integer
+                  description: 'Should this item be inactive: 0 or active: 1'
+  /app/admin/employee/post:
+    post:
+      operationId: admin.employee_post
+      tags:
+        - Post
+        - App
+        - Auth
+      summary: Edit Config Properties
+      description: >-
+        Edit Config Properties: Add or disable models, status types, contracts,
+        contract_duration, features, or additional_hardware
+      responses:
+        '201':
+          description: Successfully created person in list
+      requestBody:
+        description: Edit Config Properties
+        required: true
+        content:
+          application/json:
+            schema:
+              required:
+                - login
+              type: object
+              properties:
+                login:
+                  type: string
+                  description: 'If new employee, what is their login'
+  /app/admin/employee/put:
+    put:
+      operationId: admin.employee_put
+      tags:
+        - Post
+        - App
+        - Auth
+      summary: Edit Config Properties
+      description: >-
+        Edit Config Properties: Add or disable models, status types, contracts,
+        contract_duration, features, or additional_hardware
+      responses:
+        '201':
+          description: Successfully created person in list
+      requestBody:
+        description: Edit Config Properties
+        required: true
+        content:
+          application/json:
+            schema:
+              required:
+                - id
+                - login
+                - name
+                - tn_auth
+                - dept
+              type: object
+              properties:
+                id:
+                  type: integer
+                  description: 'If already existing property, what is its id'
+                login:
+                  type: string
+                  description: 'If new employee, what is their login'
+                name:
+                  type: string
+                  description: 'If non-existing property, what is its name'
+                tn_auth:
+                  type: integer
+                  description: >-
+                    What permission level should the user be:
+                    1: Default, 2: Sales, 3: Support, 4: Admin
+                dept:
+                  type: integer
+                  description: >-
+                    What department should the user be:
+                    1. Unassigned
+                    2. Support
+                    3. Sales
+                    4. IT
+                    5. Executives
+                    6. Administration
+                    7. Finance
+                    8. Purchasing
+                    9. Marketing
+                    10. Web
+                    11. Development
+                    12. QA
+                    13. Hardware
+                    14. Documentation
+                    15. RMA
+                    16. Production
+                    17. Quality
+                    18. Inventory
+                    19. Shipping
+
+  /app/systems:
+    get:
+      operationId: systems.get_lite
+      tags:
+        - Configs
+        - App
+      summary: Read the list of systems
+      description: >-
+        Read the entire list of systems with only the information needed in the
+        list view
+      responses:
+        '200':
+          description: Successfully read systems list operation
+          content:
+            application/json:
+              schema:
+                title: Array of Systems
+                type: array
+                items:
+                  properties:
+                    timestamp:
+                      type: string
+                      description: Timestamp of the edit or creation
+                    model_name:
+                      type: string
+                      description: The name of the model type
+                    contract:
+                      type: string
+                      description: The name of the contract type
+                    status:
+                      type: string
+                      description: The status of the license
+                    system_id:
+                      type: integer
+                      description: The System ID
+                    license_id:
+                      type: integer
+                      description: >-
+                        The ID of the license. A single System ID may have many
+                        license ID's if the license changes
+                    contract_start:
+                      type: string
+                      description: 'The start date of the license. Format: YYYY-MM-DD'
+                    contract_duration:
+                      type: string
+                      description: The durration of the license
+                    contract_end:
+                      type: string
+                      description: 'The end date of the license. Format: YYYY-MM-DD'
+                    edit_id:
+                      type: integer
+                      description: >-
+                        The edit id of the system. Starts at 0 and increments
+                        with edits. Will always return most recent edit
+                    serials:
+                      type: object
+                      description: Object of hardware type and serials for the system
+                    edit:
+                      type: string
+                      description: Who this edit was made by
+  /app/system_config_types:
+    get:
+      operationId: list.getConfigTypes
+      tags:
+        - Configs
+        - App
+      summary: Read the entire list of config options
+      description: Read the entire list of config options
+      responses:
+        '200':
+          description: Successfully read the entire list of config options
+          content:
+            application/json:
+              schema:
+                title: Config Types
+                type: object
+                properties:
+                  models:
+                    title: Models
+                    description: >-
+                      List of model objects. The object includes the model id,
+                      model name, and if the model is active
+                    type: array
+                    items:
+                      title: Models
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        name:
+                          type: string
+                        active:
+                          type: boolean
+                  status:
+                    title: Status
+                    description: >-
+                      List of status objects. The object includes the status id,
+                      status name, and if the status type is active
+                    type: array
+                    items:
+                      title: Status
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        name:
+                          type: string
+                        active:
+                          type: boolean
+                  contracts:
+                    title: Contracts
+                    type: array
+                    description: >-
+                      List of contract objects. The object includes the contract
+                      id, contract name, and if the contract is active
+                    items:
+                      title: Contracts
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        name:
+                          type: string
+                        active:
+                          type: boolean
+                  hw_contracts:
+                    title: Hardware Contracts
+                    description: >-
+                      List of hardware contract objects. The object includes the
+                      hardware contract id, hardware contract name, and if the
+                      hardware contract is active
+                    type: array
+                    items:
+                      title: Hardware Contracts
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        name:
+                          type: string
+                        active:
+                          type: boolean
+                  sw_contracts:
+                    title: Software Contracts
+                    description: >-
+                      List of software contract objects. The object includes the
+                      software contract id, software contract name, and if the
+                      software contract is active
+                    type: array
+                    items:
+                      title: Software Contracts
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        name:
+                          type: string
+                        active:
+                          type: boolean
+                  features:
+                    title: Features
+                    description: >-
+                      List of feature objects. The object includes the feature
+                      id, feature name, and if the feature is active
+                    type: array
+                    items:
+                      title: Features
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        name:
+                          type: string
+                        active:
+                          type: boolean
+                  coverages:
+                    title: Coverages
+                    description: "List of coverage add-ons"
+                    type: array
+                    items:
+                      title: Coverages
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        name:
+                          type: string
+                        active:
+                          type: boolean
+                  contract_durations:
+                    title: Contract Durations
+                    description: >-
+                      List of contract duration objects. The object includes the
+                      contract duration id, contract duration name, and if the
+                      contract duration is active
+                    type: array
+                    items:
+                      title: Contract Durations
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        name:
+                          type: string
+                        active:
+                          type: boolean
+                  additional_hardware:
+                    title: Additional Hardware
+                    description: >-
+                      List of additional hardware objects. The object includes
+                      the additional hardware id, additional hardware name, and
+                      if the additional hardware is active
+                    type: array
+                    items:
+                      title: Additional Hardware
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        name:
+                          type: string
+                        active:
+                          type: boolean
+  /app/renewal_config_types:
+    get:
+      operationId: list.getRenewalList
+      tags:
+        - Renewals
+        - App
+      summary: Read the config data for renewals
+      description: Read the config data for renewals
+      responses:
+        '200':
+          description: Successfully read the config data for renewals
+          content:
+            application/json:
+              schema:
+                title: Renewal Config
+                type: object
+                properties:
+                  Renewal_Statuses:
+                    title: Array of renewal status objects
+                    description: >-
+                      List of renewal objects. The object includes the renewal
+                      status id, renewal status name, and if the renewal status
+                      is active
+                    type: array
+                    items:
+                      title: Renewal Statuses
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        name:
+                          type: string
+                        active:
+                          type: boolean
+                  Support_Employees:
+                    title: Array of support employee objects
+                    description: >-
+                      List of support employee objects. The object includes the
+                      support employee id, support employee login, support
+                      employee name, and the support employee tn_auth level
+                    type: array
+                    items:
+                      title: Support Employees
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        login:
+                          type: string
+                        name:
+                          type: string
+                        tn_auth:
+                          type: boolean
+                        department:
+                          type: string
+  /app/clients_list:
+    get:
+      operationId: list.getClientsList
+      tags:
+        - Configs
+        - App
+      summary: Read the entire list of clients
+      description: Read the entire list of clients
+      responses:
+        '200':
+          description: Successfully read the entire list of clients
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  sellers:
+                    description: >-
+                      List of seller objects. The object includes the seller id,
+                      seller name, and if the seller is active
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        name:
+                          type: string
+                        active:
+                          type: boolean
+                  customers:
+                    description: >-
+                      List of customer objects. The object includes the customer
+                      id, customer name, and if the customer is active
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                        name:
+                          type: string
+                        active:
+                          type: boolean
+
+  /systems:
+    get:
+      operationId: systems.get
+      tags:
+        - Systems
+      summary: Read the list of systems
+      description: >-
+        Read the entire list of systems order by system_id. This list only
+        includes current system information, and not any historical data
+      responses:
+        '200':
+          description: Successfully read systems list operation
+          content:
+            application/json:
+              schema:
+                title: Array of Systems
+                type: array
+                items:
+                  properties:
+                    timestamp:
+                      type: string
+                      description: Timestamp of the edit or creation
+                    model_name:
+                      type: string
+                      description: The name of the model type
+                    contract:
+                      type: string
+                      description: The name of the contract type
+                    status:
+                      type: string
+                      description: The status of the license
+                    seller:
+                      type: string
+                      description: The name of the seller (or iXsystems)
+                    customer:
+                      type: string
+                      description: 'The name of the customer, as seen by the license'
+                    system_id:
+                      type: integer
+                      description: The System ID
+                    license_id:
+                      type: integer
+                      description: >-
+                        The ID of the license. A single System ID may have many
+                        license ID's if the license changes
+                    license:
+                      type: string
+                      description: The sting of the customers license
+                    contract_start:
+                      type: string
+                      description: 'The start date of the license. Format: YYYY-MM-DD'
+                    contract_duration:
+                      type: string
+                      description: The durration of the license
+                    contract_end:
+                      type: string
+                      description: 'The end date of the license. Format: YYYY-MM-DD'
+                    edit_id:
+                      type: integer
+                      description: >-
+                        The edit id of the system. Starts at 0 and increments
+                        with edits. Will always return most recent edit
+                    serials:
+                      type: object
+                      description: Object of hardware type and serials for the system
+                    orders:
+                      type: array
+                      description: Array of order numbers tied to this system
+                      items: {}
+                    features:
+                      type: array
+                      description: >-
+                        Array of features (by their name) enabled by the
+                        license.
+                      items: {}
+                    legacy_contracts:
+                      type: array
+                      description: >-
+                        Array of legacy contracts (by their name): Hardware
+                        contracts, and Software contracts
+                      items: {}
+                    hardware:
+                      type: object
+                      description: 'Object of tuples, the hardware name and its quantity'
+                    edit:
+                      type: string
+                      description: Who this edit was made by
+  /systems/system_ids:
+    get:
+      operationId: systems.getSystemIDs
+      tags:
+        - Systems
+        - List
+      summary: Read the entire list of systems
+      description: Read the list of systems
+      responses:
+        '200':
+          description: Successfully read systems list operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  title: Systems
+                  properties:
+                    id:
+                      type: integer
+                      description: The System ID
+                    active:
+                      type: boolean
+                      description: Is the system active
+  /systems/serial_ids:
+    get:
+      operationId: list.getSerialIDs
+      tags:
+        - Systems
+        - List
+      summary: Read the entire list of systems
+      description: Read the list of systems
+      responses:
+        '200':
+          description: Successfully read systems list operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    id:
+                      type: integer
+                      description: The Serial ID
+                    serial:
+                      type: string
+                      description: The Serial
+                    hardware_type:
+                      type: string
+                      description: >-
+                        The type of hardware associated with the serial
+                        (Chassis, controller, JBOD)
+                    active:
+                      type: boolean
+                      description: Is the system active
+
+  /system/post:
+    post:
+      operationId: post.post
+      tags:
+        - Systems
+        - Post
+      summary: Create new system
+      description: >-
+        Create new system. Required: [model, status, serial, seller, customer,
+        contract, date, duration] Optional: [hw_contract, sw_contract, features,
+        hardware, systemid]
+      responses:
+        '201':
+          description: Successfully created new system
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - model
+                - status
+                - controller
+                - seller
+                - customer
+                - contract
+                - date
+                - duration
+                - edit
+              properties:
+                model:
+                  type: integer
+                  description: 'Model ID: Which model is the system'
+                status:
+                  type: integer
+                  description: 'Status ID: what is the status of the system'
+                chassis:
+                  type: array
+                  items:
+                    type: string
+                    description: >-
+                      What is the system chassis serial (A1-#####, R#-#####, or
+                      iX-#####)
+                controller:
+                  type: array
+                  items:
+                    type: string
+                    description: >-
+                      What is the system serial (A1-#####, R#-#####, or
+                      iX-#####)
+                seller:
+                  type: string
+                  description: What is the seller's name (iXsystems if no seller)
+                customer:
+                  type: string
+                  description: What is the customer name
+                contract:
+                  type: integer
+                  description: >-
+                    Contract ID: Which contract type is this license (Legacy,
+                    Bronze, etc.)
+                hw_contract:
+                  type: integer
+                  description: >-
+                    HW Contract ID: If the contract is Legacy, what is the HW
+                    contract type
+                sw_contract:
+                  type: integer
+                  description: >-
+                    SW Contract ID: If the contract is Legacy, what is the SW
+                    contract type
+                features:
+                  type: array
+                  items:
+                    type: integer
+                    description: >-
+                      Feature ID: array of feature IDs for this license, can be
+                      empty
+                coverages:
+                  type: array
+                  items:
+                    type: integer
+                    description: >-
+                      Coverage ID: array of coverage IDs for this license, can be
+                      empty
+                date:
+                  type: string
+                  description: 'Contract start date: YYYY-MM-DD format'
+                duration:
+                  type: integer
+                  description: 'Contract Duration ID: How long the contract is for'
+                hardware:
+                  type: array
+                  items:
+                    type: integer
+                    description: >-
+                      Hardware Quantity: Array of quantity of hardware. Array[i]
+                      where i is the hardware ID, can be empty
+                systemid:
+                  type: integer
+                  description: >-
+                    System ID: If new system, set to 0. This will create a new
+                    ID. Else, use the system ID you wish to update
+                edit:
+                  type: string
+                  description: Who this edit was made by
+                note:
+                  type: string
+                  description: Add any additional notes. Limit 4000 characters
+        description: Create new system
+  /system/system_id/{id}:
+    get:
+      tags:
+        - Systems
+      summary: Read the entire history of a system
+      description: 'Read the entire history of a system with a {systemid} provided'
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Numeric ID of the user to get
+          schema:
+            type: integer
+      operationId: system.getByID
+      responses:
+        '200':
+          description: Successfully found system
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/system'
+  /system/serial/{serial}:
+    get:
+      tags:
+        - Systems
+      summary: Read the entire history of a system
+      description: >-
+        Read the entire history of a system with a {controller/chassis/hardware
+        serial} provided. Will only return system if there is a system in the
+        current table with the serial
+      parameters:
+        - name: serial
+          in: path
+          required: true
+          description: Numeric ID of the user to get
+          schema:
+            type: string
+      operationId: system.getBySerial
+      responses:
+        '200':
+          description: Successfully found system
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/system'
+  /system/license/{license}:
+    get:
+      tags:
+        - Systems
+      summary: Read the entire history of a system
+      description: >-
+        Read the entire history of a system with a {system license string}
+        provided.
+      parameters:
+        - name: license
+          in: path
+          required: true
+          description: Numeric ID of the user to get
+          schema:
+            type: string
+      operationId: system.getByLicense
+      responses:
+        '200':
+          description: Successfully found system
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/system'
+
+  /renewals:
+    get:
+      operationId: renewals.get
+      tags:
+        - Renewals
+      summary: Read the entire list of renewals
+      description: Read the entire list of renewals
+      responses:
+        '200':
+          description: Successfully read the entire list of renewals
+          content:
+            application/json:
+              schema:
+                title: Array of renewal objects
+                type: array
+                items:
+                  type: object
+                  properties:
+                    timestamp:
+                      type: string
+                      description: Timestamp of the edit
+                    renewal_id:
+                      type: integer
+                      description: The id of the renewal edit
+                    system_id:
+                      type: integer
+                      description: The ID of the system
+                    ticket:
+                      type: string
+                      description: The support ticket opened for renewal
+                    create_date:
+                      type: string
+                      description: The date the renewal ticket was created
+                    name:
+                      type: string
+                      description: The name of the support tech doing the health check
+                    status:
+                      type: string
+                      description: Where in the renewal process the ticket currently is
+                    closed_date:
+                      type: string
+                      description: The date the ticket is closed out (optional)
+  /renewal/post:
+    post:
+      operationId: renewal.post
+      tags:
+        - Renewals
+        - Post
+      summary: Create or edit renewal
+      description: Create or edit renewal
+      responses:
+        '201':
+          description: Successfully created person in list
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - system_id
+                - ticket
+                - status_id
+                - tech_id
+                - create
+                - edit
+              type: object
+              properties:
+                system_id:
+                  type: integer
+                  description: The ID of the system
+                ticket:
+                  type: string
+                  description: The support ticket opened for renewal
+                status_id:
+                  type: integer
+                  description: >-
+                    Where in the renewal process the ticket currently is (by its
+                    status id)
+                tech_id:
+                  type: integer
+                  description: The id of the support tech doing the health check
+                create:
+                  type: string
+                  description: The date the renewal ticket was created
+                closed:
+                  type: string
+                  description: The date the ticket is closed out (optional)
+                renewal_index:
+                  type: integer
+                  description: Is this the index of the renewal
+                edit:
+                  type: string
+                  description: Who this edit was made by
+                note:
+                  type: string
+                  description: Add any additional notes. Limit 4000 characters
+        description: Create or edit renewal
+        required: true
+  /renewal/renewal_id/{renewal_id}:
+    get:
+      operationId: renewal.getByRenewalID
+      tags:
+        - Renewals
+      summary: Read the data from a renewal
+      description: Read the data from a renewal
+      parameters:
+        - name: renewal_id
+          in: path
+          required: true
+          description: Renewal ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully read the data from a renewal
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/renewal'
+  /renewal/system_id/{system_id}:
+    get:
+      operationId: renewal.getBySystemID
+      tags:
+        - Renewals
+      summary: Read the data from a renewal
+      description: Read the data from a renewal
+      parameters:
+        - name: system_id
+          in: path
+          required: true
+          description: Renewal ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully read the data from a renewal
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/renewal'
+  /renewal/system_id/{system_id}/{renewal_index}:
+    get:
+      operationId: renewal.getBySystemIDRenewalIndex
+      tags:
+        - Renewals
+      summary: Read the data from a renewal
+      description: Read the data from a renewal
+      parameters:
+        - name: system_id
+          in: path
+          required: true
+          description: System ID
+          schema:
+            type: string
+        - name: renewal_index
+          in: path
+          required: true
+          description: Renewal Index
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully read the data from a renewal
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/renewal'
+  /renewal/serial/{serial}:
+    get:
+      operationId: renewal.getBySerial
+      tags:
+        - Renewals
+      summary: Read the data from a renewal
+      description: Read the data from a renewal
+      parameters:
+        - name: serial
+          in: path
+          required: true
+          description: Renewal ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully read the data from a renewal
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/renewal'
+  /renewal/license/{license}:
+    get:
+      operationId: renewal.getByLicense
+      tags:
+        - Renewals
+      summary: Read the data from a renewal
+      description: Read the data from a renewal
+      parameters:
+        - name: license
+          in: path
+          required: true
+          description: Renewal ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully read the data from a renewal
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/renewal'
+
+  /orders:
+    get:
+      operationId: list.getOrderIDs
+      tags:
+        - Orders
+      summary: Read the entire list of orders
+      description: Read the entire list of orders
+      responses:
+        '200':
+          description: Successfully read the entire list of orders
+          content:
+            application/json:
+              schema:
+                title: Array of order objects
+                type: array
+                items:
+                  type: object
+                  properties:
+                    order_id:
+                      type: integer
+                      description: Timestamp of the edit
+                    system_id:
+                      type: integer
+                      description: Timestamp of the edit
+                    order_number:
+                      type: string
+                      description: The id of the renewal edit
+                    type:
+                      type: string
+                      description: The ID of the system
+                    active:
+                      type: boolean
+                      description: The support ticket opened for renewal
+
+  /employees:
+    get:
+      operationId: employees.get
+      tags:
+        - Auth
+      summary: Read the entire list of employees
+      description: Read the entire list of employees and their auth level
+      responses:
+        '200':
+          description: Successfully read the entire list of renewals
+          content:
+            application/json:
+              schema:
+                title: Array of employees
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      description: The employee ID
+                    login:
+                      type: string
+                      description: 'The employee login name, their @ixsystems.com name'
+                    name:
+                      type: string
+                      description: The full name of the employee
+                    tn_auth:
+                      type: string
+                      description: The auth group level
+                    department:
+                      type: string
+  /employees/tn_auths:
+    get:
+      operationId: employees.getAuths
+      tags:
+        - Auth
+      summary: Read the entire list of valid authentication levels
+      description: Read the entire list of valid authentication levels
+      responses:
+        '200':
+          description: Successfully read the entire list of valid authentication levels
+          content:
+            application/json:
+              schema:
+                title: Array of auths
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      description: The auth ID
+                    name:
+                      type: string
+                      description: The name of the authentication level
+                    active:
+                      type: boolean
+                      description: The is the auth level active
+  /employees/tn_auth/{auth}:
+    get:
+      operationId: employees.getUsersByAuth
+      tags:
+        - Auth
+      summary: Read the entire list of employees with permission equal to auth
+      description: Read the entire list of employees with permission equal to auth
+      parameters:
+        - name: auth
+          in: path
+          required: true
+          description: >-
+            String of their authentication level (Admin, Support, Sales, or
+            Default)
+          schema:
+            type: string
+      responses:
+        '200':
+          description: >-
+            Successfully read the entire list of employees with permission equal
+            to auth
+          content:
+            application/json:
+              schema:
+                title: Array of employees
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      description: The employee ID
+                    login:
+                      type: string
+                      description: 'The employee login name, their @ixsystems.com name'
+                    name:
+                      type: string
+                      description: The full name of the employee
+                    tn_auth:
+                      type: string
+                      description: The auth group level
+                    department:
+                      type: string
+  /employee/name/{name}:
+    get:
+      operationId: employees.getName
+      tags:
+        - Auth
+      summary: Read an employee
+      description: Read an employee and their auth level
+      parameters:
+        - name: name
+          in: path
+          required: true
+          description: Full name of employee
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully read an employee and their auth level
+          content:
+            application/json:
+              schema:
+                title: Array of employees
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      description: The employee ID
+                    login:
+                      type: string
+                      description: 'The employee login name, their @ixsystems.com name'
+                    name:
+                      type: string
+                      description: The full name of the employee
+                    tn_auth:
+                      type: string
+                      description: The auth group level
+                    department:
+                      type: string
+  /employee/login/{login}:
+    get:
+      operationId: employees.getLogin
+      tags:
+        - Auth
+      summary: Read an employee
+      description: Read an employee and their auth level
+      parameters:
+        - name: login
+          in: path
+          required: true
+          description: Full name of employee
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully read an employee and their auth level
+          content:
+            application/json:
+              schema:
+                title: Array of employees
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      description: The employee ID
+                    login:
+                      type: string
+                      description: 'The employee login name, their @ixsystems.com name'
+                    name:
+                      type: string
+                      description: The full name of the employee
+                    tn_auth:
+                      type: string
+                      description: The auth group level
+                    department:
+                      type: string
+
+
+components:
+  schemas:
+    system:
+      title: Array of System Edits
+      type: array
+      items:
+        properties:
+          timestamp:
+            type: string
+            description: Timestamp of the edit or creation
+          model_name:
+            type: string
+            description: The name of the model type
+          contract:
+            type: string
+            description: The name of the contract type
+          status:
+            type: string
+            description: The status of the license
+          seller:
+            type: string
+            description: The name of the seller (or iXsystems)
+          customer:
+            type: string
+            description: 'The name of the customer, as seen by the license'
+          system_id:
+            type: integer
+            description: The System ID
+          license_id:
+            type: integer
+            description: >-
+              The ID of the license. A single System ID may have many
+              license ID's if the license changes
+          license:
+            type: string
+            description: The sting of the customers license
+          contract_start:
+            type: string
+            description: 'The start date of the license. Format: YYYY-MM-DD'
+          contract_duration:
+            type: string
+            description: The durration of the license
+          contract_end:
+            type: string
+            description: 'The end date of the license. Format: YYYY-MM-DD'
+          edit_id:
+            type: integer
+            description: >-
+              The edit id of the system. Starts at 0 and increments
+              with edits. Will always return most recent edit
+          serials:
+            type: object
+            description: Object of hardware type and serials for the system
+          orders:
+            type: array
+            description: Array of order numbers tied to this system
+            items: {}
+          features:
+            type: array
+            description: >-
+              Array of features (by their name) enabled by the
+              license.
+            items: {}
+          legacy_contracts:
+            type: array
+            description: >-
+              Array of legacy contracts (by their name): Hardware
+              contracts, and Software contracts
+            items: {}
+          hardware:
+            type: object
+            description: 'Object of tuples, the hardware name and its quantity'
+    renewal:
+      title: Array of renewal objects
+      type: array
+      items:
+        type: object
+        properties:
+          timestamp:
+            type: string
+            description: Timestamp of the edit
+          renewal_id:
+            type: integer
+            description: The id of the renewal edit
+          system_id:
+            type: integer
+            description: The ID of the system
+          ticket:
+            type: string
+            description: The support ticket opened for renewal
+          create_date:
+            type: string
+            description: The date the renewal ticket was created
+          name:
+            type: string
+            description: The name of the support tech doing the health check
+          status:
+            type: string
+            description: Where in the renewal process the ticket currently is
+          closed_date:
+            type: string
+            description: The date the ticket is closed out (optional)
