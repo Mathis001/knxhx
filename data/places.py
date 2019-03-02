@@ -7,7 +7,6 @@ import datetime
 import pickle
 
 csvfile = './open_potholes.csv'
-picklefile = './potholeworkoders.pickles'
 sanity_picklefile = './sanity_potholes.pickles'
 geocoding_api_key = 'AIzaSyDbZWg9g0t3QIuZAyz5azDuXUxx6vDV7fg'
 maps_geocode_url = 'https://maps.googleapis.com/maps/api/geocode/json'
@@ -63,14 +62,14 @@ class PotholeLocation:
         if len(data['results']) < 1:
             print('got no results')
             return None
-        print('{} len {}'.format(address, len(data['results'])))
+#        print('{} len {}'.format(address, len(data['results'])))
         winning_result = None
         if len(data['results']) == 1:
             res = data['results'][0]
             valid_loc = PotholeLocation.validate_loc_type(res)
-            print('{} validloc? {}'.format(address, valid_loc))
+#            print('{} validloc? {}'.format(address, valid_loc))
             valid_cty = PotholeLocation.validate_county(res)
-            print('{} validcty? {}'.format(address, valid_cty))
+#            print('{} validcty? {}'.format(address, valid_cty))
             if valid_loc and valid_cty:
                 winning_result = res
         else:
@@ -109,16 +108,16 @@ class PotholeLocation:
             county = add_comp[cty_idx]['long_name']
             state = add_comp[st_idx]['short_name']
             if PotholeLocation.COUNTY_RE.match(county) is None:
-                print('invalid county: {}'.format(res['address_components']))
+#                print('invalid county: {}'.format(res['address_components']))
                 valid = False
             elif PotholeLocation.STATE_RE.match(state) is None:
-                print('invalid state: {}'.format(res['address_components']))
+#                print('invalid state: {}'.format(res['address_components']))
                 valid = False
         except KeyError:
-            print("key error: {}".format(res['address_components']))
+#            print("key error: {}".format(res['address_components']))
             valid = False
         except IndexError:
-            print("index error: {}".format(res['address_components']))
+#            print("index error: {}".format(res['address_components']))
             valid = False
         return valid
 
@@ -216,14 +215,6 @@ def get_online_data():
         for wo in priority_wo:
             pickle.dump(wo, pf)
 
-#def get_offline_data():
-#    with open(picklefile, 'rb') as pf:
-#        while True:
-#            try:
-#                yield pickle.load(pf)
-#            except EOFError:
-#                break
-
 def get_sanity_offline_data():
     with open(sanity_picklefile, 'rb') as spf:
         while True:
@@ -232,97 +223,11 @@ def get_sanity_offline_data():
             except EOFError:
                 break
 
-def get_county(address_components):
-    county = None
-    state = None
-    try:
-        for area in address_components:
-            if 'administrative_area_level_2' in area['types']:
-                county = area['long_name']
-            if 'administrative_area_level_1' in area['types']:
-                state = area['short_name']
-    except KeyError:
-        pass
-    if state is None or re.match('TN', state, re.IGNORECASE) is None:
-        county = None
-    return county
-
-def check_county(address_components, valid_county):
-    my_county = get_county(address_components)
-    if my_county is not None and my_county.lower() == valid_county.lower():
-        return True
-    else:
-        return False
-
-def sanitize_locs(wos):
-    for wo in wos:
-#        for res in wo.data['results']:
-#            print(res.keys())
-#            print(res['geometry']['location_type'])
-#            print('{}: '.format(wo.text_addr), end='')
-#            if 'partial_match' in res.keys():
-#                print(res['partial_match'])
-#            else:
-#                print('no')
-        if len(wo.data['results']) == 1:
-            data = wo.data['results'].pop()
-            is_partial = 'partial_match' in data.keys()
-            is_rooftop = data['geometry']['location_type'] == 'ROOFTOP'
-            is_good_county = check_county(data['address_components'],
-                    'Knox County')
-            if is_partial or not is_good_county or not is_rooftop:
-                wo.good_addr = False
-                wo.place_id = None
-                print('bad match for address {}'.format(wo.text_addr))
-            else:
-                wo.good_addr = True
-                wo.place_id = data['place_id']
-                wo.lat = data['geometry']['location']['lat']
-                wo.lng = data['geometry']['location']['lng']
-                wo.format_addr = data['formatted_address']
-                wo.addr_comp = data['address_components']
-        elif len(wo.data['results']) > 1:
-            valid_res = None
-            for res in wo.data['results']:
-                if 'partial_match' in res.keys():
-                    next
-                if res['geometry']['location_type'] != 'ROOFTOP':
-                    next
-                county = get_county(res['address_components'])
-                if check_county(res['address_components'], 'Knox County'):
-                    if valid_res is None:
-                        valid_res = res
-                    else:
-                        pass # TODO: only get first valid result for now?
-            if valid_res is None:
-                wo.good_addr = False
-                wo.place_id = None
-                print('bad match for address {}'.format(wo.text_addr))
-            else:
-                wo.good_addr = True
-                wo.data = {'results': valid_res}
-                wo.place_id = valid_res['place_id']
-                wo.lat = data['geometry']['location']['lat']
-                wo.lat = data['geometry']['location']['lng']
-                wo.format_addr = data['formatted_address']
-                wo.addr_comp = data['address_components']
-
 #get_online_data()
-
-#priority_wo = list(get_offline_data())
-
-#sanitize_locs(priority_wo)
-
-#with open(sanity_picklefile, 'wb') as spf:
-#    for wo in priority_wo:
-#        pickle.dump(wo, spf)
 
 sanity_wo = list(get_sanity_offline_data())
 
-print('========================================================================')
-for wo in sanity_wo:
-    print('{}: {}'.format(wo.text_addr, wo.place_id))
-print('========================================================================')
+#print('========================================================================')
 for wo in sanity_wo:
     wo.pretty_print()
 
@@ -332,4 +237,3 @@ for wo in sanity_wo:
 #print(testpl.lng)
 #print(testpl.format_addr)
 #print(testpl.addr_comp)
-
