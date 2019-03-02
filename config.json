@@ -1,0 +1,18 @@
+{
+    "mysql":{
+        "connector":"mysql",
+        "ipaddr":"127.0.0.1",
+        "hostname":"localhost",
+        "username":"keyserver",
+        "password":"keyserver",
+        "database":"keyserver",
+        "port":"3306"
+    },
+    "api":{
+        "hostname":"localhost",
+        "port":"5000",
+        "ssl":"False",
+        "cert_location":"/path/to/cert/fullchain.pem",
+        "key_location":"/path/to/key/key.pem"
+    }
+}
