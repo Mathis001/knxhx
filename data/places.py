@@ -8,6 +8,7 @@ import pickle
 
 csvfile = './open_potholes.csv'
 picklefile = './potholeworkoders.pickles'
+updatedpicklefile = './updatedpotholeworkoders.pickles'
 geocoding_api_key = 'AIzaSyDbZWg9g0t3QIuZAyz5azDuXUxx6vDV7fg'
 maps_geocode_url = 'https://maps.googleapis.com/maps/api/geocode/json'
 
@@ -97,14 +98,14 @@ def check_county(address_components, valid_county):
 
 def sanitize_locs(wos):
     for wo in wos:
-        for res in wo.data['results']:
-            print(res.keys())
-            print(res['geometry']['location_type'])
-            print('{}: '.format(wo.text_addr), end='')
-            if 'partial_match' in res.keys():
-                print(res['partial_match'])
-            else:
-                print('no')
+#        for res in wo.data['results']:
+#            print(res.keys())
+#            print(res['geometry']['location_type'])
+#            print('{}: '.format(wo.text_addr), end='')
+#            if 'partial_match' in res.keys():
+#                print(res['partial_match'])
+#            else:
+#                print('no')
         if len(wo.data['results']) == 1:
             data = wo.data['results'].pop()
             is_partial = 'partial_match' in data.keys()
@@ -145,5 +146,6 @@ def sanitize_locs(wos):
 priority_wo = list(get_offline_data())
 
 sanitize_locs(priority_wo)
+print('========================================================================')
 for wo in priority_wo:
     print('{}: {}'.format(wo.text_addr, wo.place_id))
