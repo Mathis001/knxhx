@@ -1,3 +1,8 @@
+/*CREATE DATABASE*/
+
+CREATE DATABASE IF NOT EXISTS `potholes`;
+
+
 /*Set Database*/
 
 USE potholes;
@@ -66,3 +71,9 @@ CREATE TABLE IF NOT EXISTS `reported` (
 	FOREIGN KEY (`priority_id`) REFERENCES reporter(`id`)
 	);
 
+/*CREATE TABLE work orders*/
+CREATE TABLE IF NOT EXISTS `workorders` (
+	`id` INT NOT NULL AUTO_INCREMENT,
+	`request_id` INT NOT NULL,
+	`w_o` VARCHAR(255) NOT NULL,
+	);
