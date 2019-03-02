@@ -188,6 +188,7 @@ class PotholeWorkorder:
             print('\tLatitude:\t{}'.format(self.pot_loc.lat))
             print('\tLongitude:\t{}'.format(self.pot_loc.lng))
             print('\tPlace ID:\t{}'.format(self.pot_loc.place_id))
+            print('\tAddr Comp:\t{}'.format(self.pot_loc.addr_comp))
 
 def get_online_data():
     priority_wo = []
