@@ -7,68 +7,66 @@ servers:
   - url: /api/v1
 paths:
   /reports/get:
-  get:
-    operationId: reports.get
-    summary: Get a list of reports
-    description: Get a list of reports
-    reponses:
-    '200':
-      description: Succesfully recieved the list of reports
-      content:
-      application/json:
-        schema:
-        title: All Reports
-        type: array
-        items:
-          properties:
-          location:
-            type: object
-            description: Location of the pothole
-          status_id:
-            type: int
-            description: Status of the pothole filling
-          zone:
-            type: string
-            description: Zone of the pothole location
-          reporter:
-            type: string
-            description: Name of the person or group that reported the pothole
-          priority:
-            type: string
-            description: Priority
- /reports/post:
-  post:
-    operationid: reports.post
-    summary: asdf
-    description: asdf
-    responses:
-      '201':
-        description: Added a report
-    requestBody:
-      description: Add report
-      required: true
-      content:
-        application/json:
-        schema:
-          required:
-          - location
-          - status_id
-          - zone
-          type: object
-          properties:
-          location:
-            type: object
-            description: Location
-          status_id:
-            type: int
-            description: Status
-          zone:
-            type: string
-            description: Zone
-          reporter:
-            type: string
-            description: Reporter Name
-          priority:
-            type: string
-            description: Priority
-
+    get:
+      operationId: reports.get
+      tags:
+        - Get
+        - App
+      summary: Reports Get
+      responses:
+        '200':
+          description: Successfully recieved list of reports
+          content:
+            application/json:
+              schema:
+                title: Array of Reports
+                type: array
+                items:
+                  properties:
+                    location:
+                      type: object
+                      description: The location of an object
+                    status_id:
+                      type: integer
+                      description: The status of pothole filling
+                    zone:
+                      type: string
+                      description: Zone of pohole location
+                    priority:
+                      type: string
+                      description: The priority
+  /reports/post:
+    post:
+      operationId: reports.post
+      tags:
+        - Post
+        - App
+      summary: Add new report
+      description: Add new report
+      responses:
+        '201':
+          description: Successfully added a report
+      requestBody:
+        description: Add new report
+        required: true
+        content:
+          application/json:
+            schema:
+              required:
+                - location
+                - status_id
+                - zone
+              type: object
+              properties:
+                location:
+                  type: object
+                  description: The location of an object
+                status_id:
+                  type: integer
+                  description: The status of pothole filling
+                zone:
+                  type: string
+                  description: Zone of pohole location
+                priority:
+                  type: string
+                  description: The priority
