@@ -10,6 +10,12 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
     - `sudo apt install apache2 python3 python3-pip python3-mysqldb mysql-server npm`
     - `sudo npm install -g @angular/cli@6.0.3`
 
+- `git clone https://github.com/Mathis001/knxhx`
+
+- Change directories to the root folder of the project: `knhx/`
+
+- Run `sudo pip3 install -r python/requirements.txt --user` to install python dependancies.
+
 ## Initialize
 
 - To create the database schema, run `sudo mysql < database/db_schema.sql`
