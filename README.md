@@ -10,7 +10,19 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
     - `sudo apt install apache2 python3 python3-pip python3-mysqldb mysql-server npm`
     - `sudo npm install -g @angular/cli@6.0.3`
 
+## Initialize
 
+- To create the database schema, run `sudo mysql < database/db_schema.sql`
+
+## Run server
+
+- Run `ng serve  --watch --host=<address> --port=4200` to launch Angular service. The app will automatically reload if you change any of the source files.
+
+- Change directory to `python/` and run `sudo python3 server.py` for the Python Flask API.
+
+- Navigate to `http://<address>:4200/` for the web interface and `http://<address>:5000/api/v1/ui/` for the api documentation.
+
+- To give yourself admin access, create a cookie in your browser for the server with the name `auth_pubtkt` and value `uid%3Dadmin`. You can also replace "admin" with any created users to help test permission and departments.
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
