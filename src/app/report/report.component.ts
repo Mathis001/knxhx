@@ -9,7 +9,17 @@ export class ReportComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit() {
-  }
+    lat:any;
+    lon:any;
 
+    ngOnInit(){
+        if(window.navigator.geolocation){
+            navigator.geolocation.getCurrentPosition((position) => {
+                this.lat = position.coords.latitude;
+                this.lon = position.coords.longitude;
+                console.log(position.coords.latitude);
+                console.log(position.coords.longitude);
+            });
+        }
+    }
 }

@@ -8,6 +8,7 @@ import pickle
 
 csvfile = './open_potholes.csv'
 picklefile = './potholeworkoders.pickles'
+sanity_picklefile = './sanity_potholes.pickles'
 geocoding_api_key = 'AIzaSyDbZWg9g0t3QIuZAyz5azDuXUxx6vDV7fg'
 maps_geocode_url = 'https://maps.googleapis.com/maps/api/geocode/json'
 
@@ -44,6 +45,19 @@ class PotholeWorkorder:
         self.goog_data = requests.get(maps_geocode_url, params=payload)
         self.data = self.goog_data.json()
 
+    def pretty_print(self):
+        print('Workorder Number: {}'.format(self.wo_num))
+        print('\tValid address:\t{}'.format(self.good_addr))
+        print('\tPriority:\t{}'.format(self.priority))
+        print('\tInput address:\t{}'.format(self.text_addr))
+        try:
+            print('\tFormatted addr:\t{}'.format(self.format_addr))
+            print('\tLatitude:\t{}'.format(self.lat))
+            print('\tLongitude:\t{}'.format(self.lng))
+            print('\tPlace ID:\t{}'.format(self.place_id))
+        except AttributeError:
+            pass
+
 def get_online_data():
     priority_wo = []
     with open(csvfile, 'r') as op:
@@ -75,6 +89,14 @@ def get_offline_data():
         while True:
             try:
                 yield pickle.load(pf)
+            except EOFError:
+                break
+
+def get_sanity_offline_data():
+    with open(sanity_picklefile, 'rb') as spf:
+        while True:
+            try:
+                yield pickle.load(spf)
             except EOFError:
                 break
 
@@ -124,7 +146,7 @@ def sanitize_locs(wos):
                 wo.good_addr = True
                 wo.place_id = data['place_id']
                 wo.lat = data['geometry']['location']['lat']
-                wo.lat = data['geometry']['location']['lng']
+                wo.lng = data['geometry']['location']['lng']
                 wo.format_addr = data['formatted_address']
                 wo.addr_comp = data['address_components']
         elif len(wo.data['results']) > 1:
@@ -158,9 +180,16 @@ def sanitize_locs(wos):
 priority_wo = list(get_offline_data())
 
 sanitize_locs(priority_wo)
+
+with open(sanity_picklefile, 'wb') as spf:
+    for wo in priority_wo:
+        pickle.dump(wo, spf)
+
+sanity_wo = list(get_sanity_offline_data())
+
 print('========================================================================')
-for wo in priority_wo:
+for wo in sanity_wo:
     print('{}: {}'.format(wo.text_addr, wo.place_id))
 print('========================================================================')
-for wo in priority_wo:
-    print(wo)
+for wo in sanity_wo:
+    wo.pretty_print()
