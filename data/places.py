@@ -63,9 +63,16 @@ class PotholeLocation:
         if len(data['results']) < 1:
             print('got no results')
             return None
+        print('{} len {}'.format(address, len(data['results'])))
         winning_result = None
         if len(data['results']) == 1:
-            winning_result = data['results'][0]
+            res = data['results'][0]
+            valid_loc = PotholeLocation.validate_loc_type(res)
+            print('{} validloc? {}'.format(address, valid_loc))
+            valid_cty = PotholeLocation.validate_county(res)
+            print('{} validcty? {}'.format(address, valid_cty))
+            if valid_loc and valid_cty:
+                winning_result = res
         else:
             for res in data['results']:
                 valid_loc = PotholeLocation.validate_loc_type(res)
@@ -74,13 +81,13 @@ class PotholeLocation:
                        winning_result = res
                        break
         if winning_result is None:
-            print('no valid results')
+            print('no valid results for {}'.format(address))
             return None
-        return cls(result['place_id'],
-                result['geometry']['location']['lat'],
-                result['geometry']['location']['lng'],
-                result['formatted_address'],
-                result['address_components'])
+        return cls(winning_result['place_id'],
+                   winning_result['geometry']['location']['lat'],
+                   winning_result['geometry']['location']['lng'],
+                   winning_result['formatted_address'],
+                   winning_result['address_components'])
 
     @staticmethod
     def validate_loc_type(res):
@@ -96,17 +103,42 @@ class PotholeLocation:
     def validate_county(res):
         valid = True
         try:
-            county = res['address_components'][4]['long_name']
-            state = res['address_components'][5]['short_name']
-            if COUNTY_RE.match(county) is None:
+            add_comp = res['address_components']
+            cty_idx = PotholeLocation.find_county_idx(add_comp)
+            st_idx = PotholeLocation.find_state_idx(add_comp)
+            county = add_comp[cty_idx]['long_name']
+            state = add_comp[st_idx]['short_name']
+            if PotholeLocation.COUNTY_RE.match(county) is None:
+                print('invalid county: {}'.format(res['address_components']))
                 valid = False
-            elif STATE_RE.match(state) is None:
+            elif PotholeLocation.STATE_RE.match(state) is None:
+                print('invalid state: {}'.format(res['address_components']))
                 valid = False
         except KeyError:
+            print("key error: {}".format(res['address_components']))
+            valid = False
+        except IndexError:
+            print("index error: {}".format(res['address_components']))
             valid = False
         return valid
 
+    @staticmethod
+    def find_add_comp_idx(address_components, comp_name):
+        index = None
+        for idx, comp in enumerate(address_components):
+            if comp_name in comp['types']:
+                index = idx
+        return index
 
+    @staticmethod
+    def find_county_idx(address_components):
+        return PotholeLocation.find_add_comp_idx(address_components,
+                'administrative_area_level_2')
+
+    @staticmethod
+    def find_state_idx(address_components):
+        return PotholeLocation.find_add_comp_idx(address_components,
+                'administrative_area_level_1')
 
 class PotholeWorkorder:
     date_re = re.compile('(\d+)/(\d+)/(\d+)')
@@ -119,7 +151,7 @@ class PotholeWorkorder:
                                      int(wo_date_match.group(1)),
                                      int(wo_date_match.group(2)))
         self.organ = organ
-        self.text_addr = "{}, {}".format(loc_addr, self.city_text)
+        self.text_addr = loc_addr
         self.status = status
         self.wo_num = wo_num
         self.req_num = req_num
@@ -132,6 +164,12 @@ class PotholeWorkorder:
         self.lng = None
         self.format_addr = None
         self.addr_comp = None
+        self.pot_loc = PotholeLocation.make_addr(self.text_addr,
+                                                 self.city_text)
+        if self.pot_loc is not None:
+            self.good_addr = True
+        else:
+            self.good_addr = False
 
     def get_geocode(self):
         payload = {'address': self.text_addr,
@@ -146,13 +184,11 @@ class PotholeWorkorder:
         print('\tValid address:\t{}'.format(self.good_addr))
         print('\tPriority:\t{}'.format(self.priority))
         print('\tInput address:\t{}'.format(self.text_addr))
-        try:
-            print('\tFormatted addr:\t{}'.format(self.format_addr))
-            print('\tLatitude:\t{}'.format(self.lat))
-            print('\tLongitude:\t{}'.format(self.lng))
-            print('\tPlace ID:\t{}'.format(self.place_id))
-        except AttributeError:
-            pass
+        if self.good_addr:
+            print('\tFormatted addr:\t{}'.format(self.pot_loc.format_addr))
+            print('\tLatitude:\t{}'.format(self.pot_loc.lat))
+            print('\tLongitude:\t{}'.format(self.pot_loc.lng))
+            print('\tPlace ID:\t{}'.format(self.pot_loc.place_id))
 
 def get_online_data():
     priority_wo = []
@@ -176,17 +212,17 @@ def get_online_data():
     for wo in priority_wo:
         wo.get_geocode()
 
-    with open(picklefile, 'wb') as pf:
+    with open(sanity_picklefile, 'wb') as pf:
         for wo in priority_wo:
             pickle.dump(wo, pf)
 
-def get_offline_data():
-    with open(picklefile, 'rb') as pf:
-        while True:
-            try:
-                yield pickle.load(pf)
-            except EOFError:
-                break
+#def get_offline_data():
+#    with open(picklefile, 'rb') as pf:
+#        while True:
+#            try:
+#                yield pickle.load(pf)
+#            except EOFError:
+#                break
 
 def get_sanity_offline_data():
     with open(sanity_picklefile, 'rb') as spf:
@@ -273,13 +309,13 @@ def sanitize_locs(wos):
 
 #get_online_data()
 
-priority_wo = list(get_offline_data())
+#priority_wo = list(get_offline_data())
 
-sanitize_locs(priority_wo)
+#sanitize_locs(priority_wo)
 
-with open(sanity_picklefile, 'wb') as spf:
-    for wo in priority_wo:
-        pickle.dump(wo, spf)
+#with open(sanity_picklefile, 'wb') as spf:
+#    for wo in priority_wo:
+#        pickle.dump(wo, spf)
 
 sanity_wo = list(get_sanity_offline_data())
 
@@ -290,10 +326,10 @@ print('========================================================================'
 for wo in sanity_wo:
     wo.pretty_print()
 
-testpl = PotholeLocation.make_latlng('35.9625505', '-83.9161831')
-print(testpl.place_id)
-print(testpl.lat)
-print(testpl.lng)
-print(testpl.format_addr)
-print(testpl.addr_comp)
+#testpl = PotholeLocation.make_latlng('35.9625505', '-83.9161831')
+#print(testpl.place_id)
+#print(testpl.lat)
+#print(testpl.lng)
+#print(testpl.format_addr)
+#print(testpl.addr_comp)
 
