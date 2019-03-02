@@ -29,6 +29,7 @@ class PotholeWorkorder:
         self.zone = zone
         self.reporter = reporter
         self.priority = priority
+        self.place_id = None
 
     def get_geocode(self):
         payload = {'address': self.text_addr,
@@ -72,12 +73,77 @@ def get_offline_data():
             except EOFError:
                 break
 
+def get_county(address_components):
+    county = None
+    state = None
+    try:
+        for area in address_components:
+            if 'administrative_area_level_2' in area['types']:
+                county = area['long_name']
+            if 'administrative_area_level_1' in area['types']:
+                state = area['short_name']
+    except KeyError:
+        pass
+    if state is None or re.match('TN', state, re.IGNORECASE) is None:
+        county = None
+    return county
+
+def check_county(address_components, valid_county):
+    my_county = get_county(address_components)
+    if my_county is not None and my_county.lower() == valid_county.lower():
+        return True
+    else:
+        return False
+
+def sanitize_locs(wos):
+    for wo in wos:
+        for res in wo.data['results']:
+            print(res.keys())
+            print(res['geometry']['location_type'])
+            print('{}: '.format(wo.text_addr), end='')
+            if 'partial_match' in res.keys():
+                print(res['partial_match'])
+            else:
+                print('no')
+        if len(wo.data['results']) == 1:
+            data = wo.data['results'].pop()
+            is_partial = 'partial_match' in data.keys()
+            is_rooftop = data['geometry']['location_type'] == 'ROOFTOP'
+            is_good_county = check_county(data['address_components'],
+                    'Knox County')
+            if is_partial or not is_good_county or not is_rooftop:
+                wo.good_addr = False
+                wo.place_id = None
+                print('bad match for address {}'.format(wo.text_addr))
+            else:
+                wo.good_addr = True
+                wo.place_id = data['place_id']
+        elif len(wo.data['results']) > 1:
+            valid_res = None
+            for res in wo.data['results']:
+                if 'partial_match' in res.keys():
+                    next
+                if res['geometry']['location_type'] != 'ROOFTOP':
+                    next
+                county = get_county(res['address_components'])
+                if check_county(res['address_components'], 'Knox County'):
+                    if valid_res is None:
+                        valid_res = res
+                    else:
+                        pass # TODO: only get first valid result for now?
+            if valid_res is None:
+                wo.good_addr = False
+                wo.place_id = None
+                print('bad match for address {}'.format(wo.text_addr))
+            else:
+                wo.good_addr = True
+                wo.data = {'results': valid_res}
+                wo.place_id = valid_res['place_id']
+
 #get_online_data()
 
 priority_wo = list(get_offline_data())
 
+sanitize_locs(priority_wo)
 for wo in priority_wo:
-    print(wo.data)
-
-
-
+    print('{}: {}'.format(wo.text_addr, wo.place_id))
