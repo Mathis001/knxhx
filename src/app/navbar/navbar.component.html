@@ -8,7 +8,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" routerLink="/">Key Server</a>
+      <a class="navbar-brand" routerLink="/">KNX POS</a>
     </div>
 
     <div id="navbar" class="collapse navbar-collapse" [ngClass]="{ 'in': isIn }">
@@ -22,11 +22,11 @@
           <a routerLink="/report" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Report</a>
         </li>
 
-        <li *ngIf="supportAuth" (click)="toggleState()">
+        <li (click)="toggleState()">
           <a routerLink="/jobs" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Jobs</a>
         </li>
 
-        <li *ngIf="adminAuth" (click)="toggleState()">
+        <li (click)="toggleState()">
           <a routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Admin</a>
         </li>
 

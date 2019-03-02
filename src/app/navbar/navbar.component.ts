@@ -14,8 +14,22 @@ export class NavbarComponent implements OnInit {
         private loadingBar: LoadingBar,
     ) { }
 
+    cookieObject:any;
+    cookieData={};
+    loginData={};
+    salesAuth = false;
+    supportAuth = false;
+    adminAuth = false;
+    isIn = false;   // store state
+
+  
+    toggleState() { // click handler
+        let bool = this.isIn;
+        this.isIn = bool === false ? true : false; 
+    }
+
     ngOnInit() {
-        console.log();
+        //console.log();
     }
 
 }
