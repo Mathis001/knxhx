@@ -1,6 +1,7 @@
 #!/usr/bin/python
 from flask import jsonify
-from api_functions import query
+from api_functions import query, dictzip
+from sqlalchemy import create_engine
 import post
 from places import *
 
@@ -66,6 +67,7 @@ def getAllWorkorders():
     else:
         return jsonify({'html':'<span>Error: No reports found</span>','text':'Error: No reports found', 'status':404}), 404
 
+#Add to yaml
 def putReportStatus(_id, status):
     json_form = request.get_json(force=True)
 
@@ -80,13 +82,13 @@ def putReportStatus(_id, status):
     else:
         return jsonify({'html':'<span>Error: Could not update report status. Report not found.</span>','text':'Error: Could not update report status. Report not found.', 'status':404}), 404
 
-def getLocationAddress(address):
-    rv = query("SELECT `id` FROM `location` WHERE input_address=%s", address)[0]
-    if rv:
-        print(rv)
-        return jsonify(dictzip(rv[0], rv[1]))
-    else:
-        return jsonify({'html':'<span>Error: No location found with that address</span>','text':'Error: No location found with that address', 'status':404}), 404
+#def getLocationAddress(address):
+    #rv = query("SELECT `id` FROM `location` WHERE input_address=%s", address)[0]
+    #if rv:
+        #print(rv)
+        #return jsonify(dictzip(rv[0], rv[1]))
+    #else:
+        #return jsonify({'html':'<span>Error: No location found with that address</span>','text':'Error: No location found with that address', 'status':404}), 404
 
 def getLocationGPS(latitude, longitude):
     rv = query("SELECT `id` FROM `location` WHERE latitude=%s and longitude=%s", (latitude, longitude))[0]
@@ -114,6 +116,7 @@ def getWorkorderStatus(status):
     else:
         return jsonify({'html':'<span>Error: No work orders found with that status</span>','text':'Error: No work orders found with that status', 'status':404}), 404
 
+#Add to yaml
 def getJobsByTruck(truck):
     pass
 
