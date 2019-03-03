@@ -1,10 +1,11 @@
 #!/usr/bin/python
 from flask import request, jsonify
-from api_functions import query, dictzip
+from api_functions import *
 from sqlalchemy import create_engine
 import post
-from places import get_address
 import json
+from places import get_address
+from routing import split_list_half, get_optimized_route
 
 # load configuration
 with open('../config.json') as json_data_file:
@@ -121,6 +122,47 @@ def getWorkorderStatus(status):
 def getJobsByTruck(truck):
     pass
 
+def create_workorder_from_id(_id):
+    rv = query("SELECT `request_id`, `w_o` FROM `workorders` WHERE id=%s", _id)[0]
+    if rv:
+        print(rv)
+        rv2 = query("SELECT * FROM `reported` WHERE id=%s", rv[0][0])[0]
+        print(rv2)
+        zone = getZoneFromId(rv2[0][0])
+        status = getStatusFromId(rv2[0][0])
+        address = getLocationFromId(rv2[0][0])
+        priority = getPriorityFromId(rv2[0][0])
+        reporter = getReporterFromId(rv2[0][0])
+        return PotholeWorkorder('1/1/2001', 'organ', address, status, rv[1], 'req', zone, reporter, priority)
+    else:
+        pass
+
+def get_valid_workorders(ids):
+    wo_list = []
+    for _id in ids:
+        create_workorder_from_id(_id)
+    return wo_list
+
+#Assumes one truck
+def getOptimalJobs():
+    rv = query("SELECT `id` FROM `workorders`")[0]
+    if rv:
+        wo_list = get_workorders(rv[0])
+        depot = PotholeWorkorder('1/1/2000', 'bob', '205 W Baxter Ave', 'status', 'num', 'req', 'zone', 'reporter', 0)
+        (route1, route2) = split_list_half(rv)
+        route1.insert(0, depot)
+        route1.insert(len(route1), depot)
+        route2.insert(0, depot)
+        route2.insert(len(route2), depot)
+        opt_route = get_optimized_route(route1)
+        ids = []
+        for wo in route1:
+            rv = query("SELECT `id` FROM `workorders` WHERE w_o=%s", wo.wo_num)[0]
+            ids.append(rv[0][0])
+        return jsonify(get_workorders(rv[0]))
+    else:
+        return jsonify({'html':'<span>Error: No work orders found</span>','text':'Error: No work orders found', 'status':404}), 404
+
 def getReportLocation(address):
     wo = PotholeWorkorder(organ=None,
                          loc_addr=address,
@@ -149,6 +191,6 @@ def getWorkorderLocation(address):
     rv = query("SELECT `id` from `workorders` WHERE report_id=(SELECT `id` from `reports` WHERE location_id=%s)", location_id)[0]
     if rv:
         print(rv)
-        return jsonify(dictzip(rv[0], rv[1]))
+        return jsonify(create_workorder_from_id(rv[0][0]))
     else:
         return jsonify({'html':'<span>Error: No work orders found with that address</span>','text':'Error: No work orders found with that address', 'status':404}), 404

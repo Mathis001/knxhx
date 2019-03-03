@@ -44,3 +44,18 @@ def dictzip(row, headers):
     for result in row:
         json_data.append(dict(zip(headers,result)))
     return json_data
+
+def getReporterFromId(_reporterid):
+    return query("SELECT name FROM reporter WHERE id=%s", _reporterid)[0]
+
+def getZoneFromId(_zoneid):
+    return query("SELECT zone_name FROM zones WHERE id=%s", _zoneid)[0]
+
+def getStatusFromId(_statusid):
+    return query("SELECT name FROM status WHERE id=%s", _statusid)[0]
+
+def getPriorityFromId(_priorityid):
+    return query("SELECT name FROM priority WHERE id=%s", _priorityid)[0]
+
+def getLocationFromId(_locationid):
+    return query("SELECT full_address FROM locations WHERE id=%s", _locationid)[0]

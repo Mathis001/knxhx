@@ -278,4 +278,46 @@ paths:
                     reporter:
                       type: string
                       description: The reporter's name
-
+  /workorders/get/location:
+    get:
+      operationId: reports.getWorkorderLocation
+      tags:
+        - Get
+        - App
+      summary: Get work orders of the location
+      description: Get work orders with the given address
+      responses:
+        '200':
+          description: Successfully received list of work orders
+          content:
+            application/json:
+              schema:
+                title: Array of Work Orders
+                type: array
+                items:
+                  properties:
+                    wo:
+                      type: object
+                      description: Work Order
+                    
+  /jobs/getoptimal:
+    get:
+      operationId: reports.getOptimalJobs()
+      tags:
+        - Get
+        - App
+      summary: Get list of jobs in the optimal path. Max 23 points.
+      description: Get list of jobs in the optimal path. Max 23 points.
+      responses:
+        '200':
+          description: Successfully got list of jobs
+          content:
+            application/json:
+              schema:
+                title: Array of jobs
+                type: array
+                items:
+                  properties:
+                    workorder:
+                      type: object
+                      description: Workorder associated with the job
