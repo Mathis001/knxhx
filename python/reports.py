@@ -43,10 +43,10 @@ def getLocationGPS(latitude, longitude):
     else:
         return jsonify({'html':'<span>Error: No reports found</span>','text':'Error: No reports found', 'status':404}), 404
 
-def getJobsStatus(status):
+def getReportStatus(status):
     pass
 
-def getNextJob(_id):
+def getJobsByTruck(truck):
     pass
 
 def getReportLocation(address):

@@ -70,6 +70,22 @@ CREATE TABLE IF NOT EXISTS `reported` (
 	FOREIGN KEY (`priority_id`) REFERENCES priority(`id`)
 	);
 
+/*CREATE TABLE jobs*/
+CREATE TABLE IF NOT EXISTS `jobs` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `workorder_id` INT NOT NULL,
+    `truck_id` INT NOT NULL,
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`workorder_id`) REFERENCES workorders(`id`),
+    FOREIGN KEY (`truck_id`) REFERENCES trucks(`id`)
+
+/*CREATE TABLE trucks*/
+CREATE TABLE IF NOT EXISTS `trucks` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(255) NOT NULL,
+    PRIMARY KEY (`id`)
+    );
+
 /*CREATE TABLE work orders*/
 CREATE TABLE IF NOT EXISTS `workorders` (
 	`id` INT NOT NULL AUTO_INCREMENT,
