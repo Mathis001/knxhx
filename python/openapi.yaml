@@ -8,14 +8,14 @@ servers:
 paths:
   /reports/get:
     get:
-      operationId: reports.get
+      operationId: reports.getAllReports
       tags:
         - Get
         - App
       summary: Reports Get
       responses:
         '200':
-          description: Successfully recieved list of reports
+          description: Successfully received list of reports
           content:
             application/json:
               schema:
@@ -31,13 +31,13 @@ paths:
                       description: The status of pothole filling
                     zone:
                       type: string
-                      description: Zone of pohole location
+                      description: Zone of pothole location
                     priority:
                       type: string
                       description: The priority
   /reports/post:
     post:
-      operationId: reports.post
+      operationId: reports.postReport
       tags:
         - Post
         - App
@@ -66,7 +66,7 @@ paths:
                   description: The status of pothole filling
                 zone:
                   type: string
-                  description: Zone of pohole location
+                  description: Zone of pothole location
                 priority:
                   type: string
                   description: The priority

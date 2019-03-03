@@ -80,9 +80,7 @@ def getLocation(conn, _location, wo):
         return currentLocationID[0][0]
 
 
-def post():
-    json_form = request.get_json(force=True)
-
+def post(json_form):
     _date = json_form["date"]
     _organ = json_form["organ"]
     _location = json_form["location"]
