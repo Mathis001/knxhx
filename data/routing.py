@@ -172,51 +172,55 @@ def get_optimized_route(route):
 #    url = '{}/{}'.format(url,dest.pot_loc.format_addr.replace(' ', '+'))
 #    return url
 
-valid_wo = get_valid_workorders(sanity_wo)
+def main():
+    valid_wo = get_valid_workorders(sanity_wo)
 
-(route1, route2) = split_list_half(valid_wo, depot)
-single_route = get_single_route(valid_wo, depot)
-#get_test_url(route1)
-#get_test_url(route2)
-opt_route1 = get_optimized_route(route1)
-opt_route2 = get_optimized_route(route2)
-opt_single = get_optimized_route(single_route)
-get_test_url(opt_route1)
-get_test_url(opt_route2)
-get_test_url(opt_single)
+    (route1, route2) = split_list_half(valid_wo, depot)
+    single_route = get_single_route(valid_wo, depot)
+    #get_test_url(route1)
+    #get_test_url(route2)
+    opt_route1 = get_optimized_route(route1)
+    opt_route2 = get_optimized_route(route2)
+    opt_single = get_optimized_route(single_route)
+    get_test_url(opt_route1)
+    get_test_url(opt_route2)
+    get_test_url(opt_single)
 
-origin_wo = depot
-dest_wo = depot
+    origin_wo = depot
+    dest_wo = depot
 
-waypoints = []
-for loc in valid_wo:
-    waypoints.append(loc.pot_loc.format_addr)
-waypoints = waypoints[0:22]
+    waypoints = []
+    for loc in valid_wo:
+        waypoints.append(loc.pot_loc.format_addr)
+    waypoints = waypoints[0:22]
 
-waypoint_str = "|".join(waypoints)
-waypoint_str = '{}|{}'.format('optimize:true', waypoint_str)
+    waypoint_str = "|".join(waypoints)
+    waypoint_str = '{}|{}'.format('optimize:true', waypoint_str)
 
-payload = {'origin': '{}'.format(origin_wo.pot_loc.format_addr),
-           'destination': '{}'.format(dest_wo.pot_loc.format_addr),
-           'waypoints': waypoint_str,
-           'key': directions_api_key,
-          }
-#print(payload)
+    payload = {'origin': '{}'.format(origin_wo.pot_loc.format_addr),
+               'destination': '{}'.format(dest_wo.pot_loc.format_addr),
+               'waypoints': waypoint_str,
+               'key': directions_api_key,
+              }
+    #print(payload)
 
-goog_data = requests.get(dir_url, params=payload)
-data = goog_data.json()
+    goog_data = requests.get(dir_url, params=payload)
+    data = goog_data.json()
 
-#print(data)
-#print(data.keys())
+    #print(data)
+    #print(data.keys())
 
-order = data['routes'][0]['waypoint_order']
-#print(order)
-for idx, val in enumerate(order):
-    order[idx] = int(val)
+    order = data['routes'][0]['waypoint_order']
+    #print(order)
+    for idx, val in enumerate(order):
+        order[idx] = int(val)
 
-url = 'https://www.google.com/maps/dir/{}/'.format(origin_wo.pot_loc.format_addr.replace(' ','+'))
-for idx in order:
-    url = '{}/{}'.format(url,valid_wo[idx].pot_loc.format_addr.replace(' ','+'))
-url = '{}/{}'.format(url,dest_wo.pot_loc.format_addr.replace(' ', '+'))
+    url = 'https://www.google.com/maps/dir/{}/'.format(origin_wo.pot_loc.format_addr.replace(' ','+'))
+    for idx in order:
+        url = '{}/{}'.format(url,valid_wo[idx].pot_loc.format_addr.replace(' ','+'))
+    url = '{}/{}'.format(url,dest_wo.pot_loc.format_addr.replace(' ', '+'))
 
-#print(url)
+    #print(url)
+
+if __name__ == "__main__":
+    main()
