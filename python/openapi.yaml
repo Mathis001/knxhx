@@ -196,6 +196,13 @@ paths:
         - App
       summary: Get reports of the status
       description: Get reports with the inputted status
+      parameters:
+        - name: status
+          in: query
+          required: true
+          description: Status
+          schema:
+            type: string
       responses:
         '200':
           description: Successfully received list of reports
@@ -229,6 +236,13 @@ paths:
         - App
       summary: Get all work orders with the given status
       description: Get all work orders with the given status
+      parameters:
+        - name: status
+          in: query
+          required: true
+          description: Status
+          schema:
+            type: string
       responses:
         '200':
           description: Successfully received all work orders

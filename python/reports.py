@@ -100,8 +100,8 @@ def getLocationGPS(latitude, longitude):
         return jsonify({'html':'<span>Error: No locations found with those coordinates</span>','text':'Error: No locations found with those coordinates', 'status':404}), 404
 
 def getReportStatus(status):
-    status_id = post.getStatus(conn, _status)
-    rv = query("SELECT `id` from `reports` WHERE status_id=%s", status_id)[0]
+    status_id = post.getStatus(conn, status)
+    rv = query("SELECT `id` from `reported` WHERE status_id=%s", status_id)[0]
     if rv:
         print(rv)
         return jsonify(dictzip(rv[0], rv[1]))
@@ -109,8 +109,8 @@ def getReportStatus(status):
         return jsonify({'html':'<span>Error: No reports found with that status</span>','text':'Error: No reports found with that status', 'status':404}), 404
 
 def getWorkorderStatus(status):
-    status_id = post.getStatus(conn, _status)
-    rv = query("SELECT `id` from `workorders` WHERE report_id=(SELECT `id` from `reports` WHERE status_id=%s)", status_id)[0]
+    status_id = post.getStatus(conn, status)
+    rv = query("SELECT `id` from `workorders` WHERE report_id=(SELECT `id` from `reported` WHERE status_id=%s)", status_id)[0]
     if rv:
         print(rv)
         return jsonify(dictzip(rv[0], rv[1]))
@@ -173,7 +173,7 @@ def getReportLocation(address):
                          reporter=None,
                          priority=None)
     location_id = post.getLocation(conn, address, wo)
-    rv = query("SELECT `id` from `reports` WHERE location_id=%s", location_id)[0]
+    rv = query("SELECT `id` from `reported` WHERE location_id=%s", location_id)[0]
     if rv:
         print(rv)
         return jsonify(dictzip(rv[0], rv[1]))
@@ -189,7 +189,7 @@ def getWorkorderLocation(address):
                          reporter=None,
                          priority=None)
     location_id = post.getLocation(conn, address, wo)
-    rv = query("SELECT `id` from `workorders` WHERE report_id=(SELECT `id` from `reports` WHERE location_id=%s)", location_id)[0]
+    rv = query("SELECT `id` from `workorders` WHERE report_id=(SELECT `id` from `reported` WHERE location_id=%s)", location_id)[0]
     if rv:
         print(rv)
         return jsonify(create_workorder_from_id(rv[0][0]))
