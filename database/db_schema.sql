@@ -10,7 +10,7 @@ USE potholes;
 
 CREATE TABLE IF NOT EXISTS `zone`(
 	`id` INT NOT NULL AUTO_INCREMENT,
-	`zone_number` INT NOT NULL,
+	`zone_number` INT DEFAULT 0,
 	`zone_notes` VARCHAR(255) DEFAULT '',
 	PRIMARY KEY (`id`)
 	);
@@ -31,8 +31,8 @@ CREATE TABLE IF NOT EXISTS `location`(
 	`street_name` VARCHAR(255) NOT NULL,
 	`city` VARCHAR(255) NOT NULL,
 	`state` VARCHAR(255) NOT NULL,
-	`latitude` VARCHAR(255) NOT NULL,
-	`logitude` VARCHAR(255) NOT NULL,
+	`latitude` VARCHAR(255) DEFAULT '',
+	`longitude` VARCHAR(255) DEFAULT '',
 	PRIMARY KEY (`id`)
 	);
 

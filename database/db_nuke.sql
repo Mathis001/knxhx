@@ -1,14 +1,2 @@
-/*Set Database*/
-
-USE potholes;
-
-DROP TABLE IF EXISTS workorders;
-DROP TABLE IF EXISTS reported;
-DROP TABLE IF EXISTS priority;
-DROP TABLE IF EXISTS reporter;
-DROP TABLE IF EXISTS location;
-DROP TABLE IF EXISTS status;
-DROP TABLE IF EXISTS zone;
-DROP TABLE IF EXISTS user;
-DROP TABLE IF EXISTS authlvl;
-
+drop database potholes;
+drop user 'knoxpotholes'@'localhost';
