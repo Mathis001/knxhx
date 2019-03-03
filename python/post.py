@@ -71,18 +71,16 @@ def getStatus(conn, _status):
         return currentStatusID[0][0]
 
 def getLocation(conn, _location, wo):
-    currentLocationID = conn.execute("SELECT id FROM location WHERE street_number=%s AND street_name=%s", (wo.pot_loc.addr_comp[0]['short_name'], wo.pot_loc.addr_comp[1]['short_name'],)).fetchall()
+    currentLocationID = query("SELECT id FROM location WHERE full_address=%s", wo.pot_loc.format_addr)[0]
     if not currentLocationID:
-        conn.execute("INSERT INTO location(street_number, street_name, city, state, latitude, longitude) VALUES (%s,%s,%s,%s,%s,%s)", (wo.pot_loc.addr_comp[0]['short_name'], wo.pot_loc.addr_comp[1]['short_name'], wo.pot_loc.addr_comp[3]['short_name'], wo.pot_loc.addr_comp[5]['short_name'], wo.lat, wo.lng))
-        currentLocationID = conn.execute("SELECT id FROM location WHERE street_number=%s AND street_name=%s", (wo.pot_loc.addr_comp[0]['short_name'], wo.pot_loc.addr_comp[1]['short_name'],)).fetchall()
+        conn.execute("INSERT INTO location(input_address, full_address, city, latitude, longitude) VALUES (%s,%s,%s,%s,%s)", (wo.text_addr, wo.pot_loc.format_addr, wo.pot_loc.addr_comp[2]['short_name'], wo.lat, wo.lng))
+        currentLocationID = query("SELECT id FROM location WHERE full_address=%s", wo.pot_loc.format_addr)[0]
         return currentLocationID[0][0]
     else:
         return currentLocationID[0][0]
 
 
-def post():
-    json_form = request.get_json(force=True)
-
+def post(json_form):
     _date = json_form["date"]
     _organ = json_form["organ"]
     _location = json_form["location"]

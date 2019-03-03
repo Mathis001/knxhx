@@ -2,8 +2,20 @@
 from flask import jsonify
 from api_functions import query
 
-def adminPost():
+def postAdmin():
     pass
 
-def getForemen():
+def getAdmin():
+    pass
+
+def putAdmin():
+    pass
+
+def getUser():
+    pass
+
+def postUser():
+    pass
+
+def putUser():
     pass

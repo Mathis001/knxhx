@@ -7,6 +7,7 @@ INSERT INTO status(`name`) VALUES
 ('Done');
 
 INSERT INTO priority(`name`) VALUES ('Default');
+INSERT INTO trucks(`name`) VALUES ('Truck 1');
 
 CREATE USER 'knoxpotholes'@'localhost' IDENTIFIED BY 'knoxpotholes';
 GRANT ALL PRIVILEGES ON potholes.* TO 'knoxpotholes'@'localhost' WITH GRANT OPTION;

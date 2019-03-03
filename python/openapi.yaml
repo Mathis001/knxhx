@@ -8,14 +8,15 @@ servers:
 paths:
   /reports/get:
     get:
-      operationId: reports.get
+      operationId: reports.getAllReports
       tags:
         - Get
         - App
       summary: Reports Get
+      description: Reports Get
       responses:
         '200':
-          description: Successfully recieved list of reports
+          description: Successfully received list of reports
           content:
             application/json:
               schema:
@@ -31,13 +32,16 @@ paths:
                       description: The status of pothole filling
                     zone:
                       type: string
-                      description: Zone of pohole location
+                      description: Zone of pothole location
                     priority:
                       type: string
                       description: The priority
+                    reporter:
+                      type: string
+                      description: The reporter's name
   /reports/post:
     post:
-      operationId: reports.post
+      operationId: reports.postReport
       tags:
         - Post
         - App
@@ -66,7 +70,212 @@ paths:
                   description: The status of pothole filling
                 zone:
                   type: string
-                  description: Zone of pohole location
+                  description: Zone of pothole location
                 priority:
                   type: string
                   description: The priority
+                reporter:
+                  type: string
+                  description: The reporter's name
+  /location/post/gps:
+    post:
+      operationId: reports.postLocationGPS
+      tags:
+        - Post
+        - App
+      summary: Add new location by GPS coordinates
+      description: Add new location by GPS coordinates
+      responses:
+        '201':
+          description: Succesfully added location
+      requestBody:
+        description: Add new location
+        required: true
+        content:
+          application/json:
+            schema:
+              required:
+                - latitude
+                - longitude
+              type: object
+              properties:
+                latitude:
+                  type: string
+                  description: Latitude
+                longitude:
+                  type: string
+                  description: Longitude
+  /location/post/address:
+      post:
+        operationId: reports.postLocationAddress
+        tags:
+          - Post
+          - App
+        summary: Add new location by address
+        description: Add new location by address
+        responses:
+          '201':
+            description: Succesfully added location
+        requestBody:
+          description: Add new location
+          required: true
+          content:
+            application/json:
+              schema:
+                required:
+                  - address
+                type: object
+                properties:
+                  address:
+                    type: string
+                    description: Address
+  /workorders/get:
+    get:
+      operationId: reports.getAllWorkorders
+      tags:
+        - Get
+        - App
+      summary: Get all work orders
+      description: Get all work orders
+      responses:
+        '200':
+          description: Successfully received all work orders
+          content:
+            application/json:
+              schema:
+                title: Array of work orders
+                type: array
+                items:
+                  properties:
+                    wo:
+                      type: string
+                      description: W/O ID for documentation
+                    request_id:
+                      type: object
+                      description: Request associated with the workorder
+  /location/get/gps:
+    get:
+      operationId: reports.getLocationGPS
+      tags:
+        - Get
+        - App
+      summary: Get the address at the GPS coordinates
+      description: Get the address at the GPS coordinates
+      parameters:
+        - name: longitude
+          in: query
+          required: true
+          description: Longitude
+          schema:
+            type: string
+        - name: latitude
+          in: query
+          required: true
+          description: Latitude
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: Successfully retrieved the address
+          content:
+            application/json:
+              schema:
+                title: Array of work orders
+                type: object
+                items:
+                  properties:
+                    address:
+                      type: string
+                      description: Address of the location
+  /reports/get/status:
+    get:
+      operationId: reports.getReportStatus
+      tags:
+        - Get
+        - App
+      summary: Get reports of the status
+      description: Get reports with the inputted status
+      responses:
+        '200':
+          description: Successfully received list of reports
+          content:
+            application/json:
+              schema:
+                title: Array of Reports
+                type: array
+                items:
+                  properties:
+                    location:
+                      type: object
+                      description: The location of an object
+                    status_id:
+                      type: integer
+                      description: The status of pothole filling
+                    zone:
+                      type: string
+                      description: Zone of pothole location
+                    priority:
+                      type: string
+                      description: The priority
+                    reporter:
+                      type: string
+                      description: The reporter's name
+  /workorders/get/status:
+    get:
+      operationId: reports.getWorkorderStatus
+      tags:
+        - Get
+        - App
+      summary: Get all work orders with the given status
+      description: Get all work orders with the given status
+      responses:
+        '200':
+          description: Successfully received all work orders
+          content:
+            application/json:
+              schema:
+                title: Array of work orders
+                type: array
+                items:
+                  properties:
+                    wo:
+                      type: string
+                      description: W/O ID for documentation
+                    request_id:
+                      type: object
+                      description: Request associated with the workorder
+  /reports/get/location:
+    get:
+      operationId: reports.getReportLocation
+      tags:
+        - Get
+        - App
+      summary: Get reports of the location
+      description: Get reports with the given address
+      responses:
+        '200':
+          description: Successfully received list of reports
+          content:
+            application/json:
+              schema:
+                title: Array of Reports
+                type: array
+                items:
+                  properties:
+                    location:
+                      type: object
+                      description: The location of an object
+                    status_id:
+                      type: integer
+                      description: The status of pothole filling
+                    zone:
+                      type: string
+                      description: Zone of pothole location
+                    priority:
+                      type: string
+                      description: The priority
+                    reporter:
+                      type: string
+                      description: The reporter's name
+
