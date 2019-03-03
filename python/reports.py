@@ -4,7 +4,7 @@ from api_functions import *
 from sqlalchemy import create_engine
 import post
 import json
-from places import get_address
+from places import *
 from routing import split_list_half, get_optimized_route
 
 # load configuration
@@ -54,18 +54,17 @@ def postLocationAddress():
     return jsonify({'html':'<span>Location Created</span>','text':'Location created at '+location_id, 'status':200}), 200
 
 def getAllReports():
-    rv = query("SELECT * FROM `reported` ORDER BY `id`", '')[0]
+    rv = query("SELECT `id` FROM `reported` ORDER BY `id`", '')[0]
     if rv:
-        print(rv)
         return jsonify(dictzip(rv[0], rv[1]))
     else:
         return jsonify({'html':'<span>Error: No reports found</span>','text':'Error: No reports found', 'status':404}), 404
 
 def getAllWorkorders():
-    rv = query("SELECT * FROM `workorders` ORDER BY `id`", '')[0]
+    rv = query("SELECT `id` FROM `workorders` ORDER BY `id`", '')[0]
     if rv:
-        print(rv)
-        return jsonify(dictzip(rv[0], rv[1]))
+        wo_list = get_valid_workorders(rv)
+        return jsonify(wo_list)
     else:
         return jsonify({'html':'<span>Error: No reports found</span>','text':'Error: No reports found', 'status':404}), 404
 
@@ -125,22 +124,24 @@ def getJobsByTruck(truck):
 def create_workorder_from_id(_id):
     rv = query("SELECT `request_id`, `w_o` FROM `workorders` WHERE id=%s", _id)[0]
     if rv:
-        print(rv)
-        rv2 = query("SELECT * FROM `reported` WHERE id=%s", rv[0][0])[0]
-        print(rv2)
-        zone = getZoneFromId(rv2[0][0])
-        status = getStatusFromId(rv2[0][0])
-        address = getLocationFromId(rv2[0][0])
-        priority = getPriorityFromId(rv2[0][0])
-        reporter = getReporterFromId(rv2[0][0])
-        return PotholeWorkorder('1/1/2001', 'organ', address, status, rv[1], 'req', zone, reporter, priority)
+        #print(rv)
+        rv2 = query("SELECT * FROM `reported` WHERE id=%s", rv[0][0])[0][0]
+        #print(rv2)
+        status = getStatusFromId(rv2[1])
+        address = getLocationFromId(rv2[2])
+        zone = getZoneFromId(rv2[3])
+        reporter = getReporterFromId(rv2[4])
+        priority = getPriorityFromId(rv2[5])
+        wo = PotholeWorkorder('1/1/2001', 'organ', address, status, rv[0][1], 'req', zone, reporter, priority)
+        #wo.pretty_print()
+        return wo
     else:
         pass
 
 def get_valid_workorders(ids):
     wo_list = []
     for _id in ids:
-        create_workorder_from_id(_id)
+        wo_list.append(create_workorder_from_id(_id[0]))
     return wo_list
 
 #Assumes one truck

@@ -302,7 +302,7 @@ paths:
                     
   /jobs/getoptimal:
     get:
-      operationId: reports.getOptimalJobs()
+      operationId: reports.getOptimalJobs
       tags:
         - Get
         - App

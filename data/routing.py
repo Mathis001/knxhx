@@ -23,11 +23,6 @@ def get_sanity_offline_data():
             except EOFError:
                 break
 
-depot = PotholeWorkorder('1/1/2000', 'bob', '205 W Baxter Ave', 'status', 'num', 'req', 'zone', 'reporter', 0)
-Ebonus = PotholeWorkorder('1/1/2000', 'bob', '9405 S Northshore Dr', 'status', 'num', 'req', 'zone', 'reporter', 0)
-
-sanity_wo = list(get_sanity_offline_data())
-#sanity_wo.append(bonus)
 
 def get_valid_workorders(workorders):
     valid_wo = []
@@ -173,6 +168,12 @@ def get_optimized_route(route):
 #    return url
 
 def main():
+    depot = PotholeWorkorder('1/1/2000', 'bob', '205 W Baxter Ave', 'status', 'num', 'req', 'zone', 'reporter', 0)
+    Ebonus = PotholeWorkorder('1/1/2000', 'bob', '9405 S Northshore Dr', 'status', 'num', 'req', 'zone', 'reporter', 0)
+
+    sanity_wo = list(get_sanity_offline_data())
+    #sanity_wo.append(bonus)
+
     valid_wo = get_valid_workorders(sanity_wo)
 
     (route1, route2) = split_list_half(valid_wo, depot)
