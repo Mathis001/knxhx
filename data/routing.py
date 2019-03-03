@@ -7,6 +7,7 @@ from places import PotholeLocation
 from places import PotholeWorkorder
 from itertools import combinations
 import math
+import random
 
 sane_picklefile = './sanity_potholes.pickles'
 directions_api_key = 'AIzaSyDbZWg9g0t3QIuZAyz5azDuXUxx6vDV7fg'
@@ -22,10 +23,11 @@ def get_sanity_offline_data():
             except EOFError:
                 break
 
-#depot = PotholeLocation.make_addr(depot_addr)
 depot = PotholeWorkorder('1/1/2000', 'bob', '205 W Baxter Ave', 'status', 'num', 'req', 'zone', 'reporter', 0)
+Ebonus = PotholeWorkorder('1/1/2000', 'bob', '9405 S Northshore Dr', 'status', 'num', 'req', 'zone', 'reporter', 0)
 
 sanity_wo = list(get_sanity_offline_data())
+#sanity_wo.append(bonus)
 
 def get_valid_workorders(workorders):
     valid_wo = []
@@ -61,8 +63,8 @@ def split_list_half(workorders):
     max_b = tup_map[max_pair[1]]
     ll_tups.remove(max_pair[1])
     max_b_tup = max_pair[1]
-    print("max_a: {}".format(max_a.pot_loc.format_addr))
-    print("max_b: {}".format(max_b.pot_loc.format_addr))
+#    print("max_a: {}".format(max_a.pot_loc.format_addr))
+#    print("max_b: {}".format(max_b.pot_loc.format_addr))
     routeA = []
     routeB = []
     # keep getting nearest
@@ -75,6 +77,18 @@ def split_list_half(workorders):
         min_b = get_nearest(max_b_tup, ll_tups)
         routeB.append(tup_map[min_b])
         ll_tups.remove(min_b)
+    # if there's a pothole left over, randomly allocate it
+    # but only if the chosen random route has room
+    if len(ll_tups) == 1:
+#        print('one left')
+        last_tup = ll_tups.pop()
+        if random.choice([True, False]):
+            if len(routeA) < (MAX_WAYPOINTS - 1):
+                routeA.append(tup_map[last_tup])
+        else:
+            if len(routeB) < (MAX_WAYPOINTS - 1):
+                routeB.append(tup_map[last_tup])
+    # put the farthest points in as origins for the routes
     routeA.insert(0, max_a)
     routeB.insert(0, max_b)
     return (routeA, routeB)
@@ -96,9 +110,9 @@ def get_test_url(depot, waypoints):
 
 def get_optimized_route(route):
     origin = route.pop(0)
-    print(origin.pot_loc.format_addr)
+#    print(origin.pot_loc.format_addr)
     dest = route.pop(len(route) - 1)
-    print(dest.pot_loc.format_addr)
+#    print(dest.pot_loc.format_addr)
     waypoint_addrs = []
     for wp in route:
         waypoint_addrs.append(wp.pot_loc.format_addr)
