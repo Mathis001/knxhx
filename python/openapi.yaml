@@ -161,6 +161,20 @@ paths:
         - App
       summary: Get the address at the GPS coordinates
       description: Get the address at the GPS coordinates
+      parameters:
+        - name: longitude
+          in: query
+          required: true
+          description: Longitude
+          schema:
+            type: string
+        - name: latitude
+          in: query
+          required: true
+          description: Latitude
+          schema:
+            type: string
+
       responses:
         '200':
           description: Successfully retrieved the address
