@@ -21,6 +21,10 @@ const routes: Routes = [
         component: JobsComponent,
     },
     {
+        path: 'jobs/:id',
+        component: JobsComponent,
+    },
+    {
         path: 'admin',
         component: AdminComponent,
     },

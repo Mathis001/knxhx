@@ -23,6 +23,7 @@ export class JobsComponent implements OnInit {
 		public snackBar: MatSnackBar
 	) {	}
 
+	id:any;
 	location:any;
 	address = "617 Cumberland Ave";
 	city = "Knoxville"
@@ -31,6 +32,7 @@ export class JobsComponent implements OnInit {
 	lat = "35.9610544"
 	lon = "-83.9206974"
 
+	statusControl = new FormControl('', [Validators.required]);
 	noteControl = new FormControl();
 
 	url = "https://www.google.com/maps/place/"
@@ -46,8 +48,21 @@ export class JobsComponent implements OnInit {
 	}
 
 	post() {
-		
+		if (this.statusControl.value) {
+			this.statusControl.setValue('');
+			this.router.navigate(['./jobs/' + parseInt(this.id + 1)]);
+		}
 	}
+
+	getID() {
+        this.route.params.subscribe( params => {
+        	if (params.id) {
+        		this.id = parseInt(params.id);
+        	}else {
+        		this.router.navigate(['./jobs/' + 1]);
+        	}
+        });
+    }
 
 
 /*	getLocationByID(id) {
@@ -61,6 +76,7 @@ export class JobsComponent implements OnInit {
 
 	ngOnInit() {
 		console.log(this.url);
+		this.getID();
 	}
 
 }

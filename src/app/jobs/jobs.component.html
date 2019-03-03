@@ -4,7 +4,7 @@
 <div class="container">
 
 	<div class="page-header">
-		<h1>{{id}} {{address}}</h1>
+		<h1>{{id}}) {{address}}</h1>
 		<button mat-icon-button mat-fab class="my-fab" aria-label="Get GPS Location" matTooltip="Get GPS Location" [matTooltipShowDelay]="1000" (click)="addressRedirect()" style="float: right;"><mat-icon>map</mat-icon></button>
 	</div>
 
@@ -13,7 +13,8 @@
   	<br />
 
 	<mat-form-field class="col-md-12 full-width">
-        <mat-select placeholder="Status" aria-label="Status" required>
+        <mat-select placeholder="Status" aria-label="Status" [formControl]="statusControl" required>
+        	<mat-option>----</mat-option>
         	<mat-option value="Needs Additional Work">Needs Additional Work</mat-option>
         	<mat-option value="Completed">Completed</mat-option>
       	</mat-select>
