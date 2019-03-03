@@ -75,7 +75,6 @@ export class JobsComponent implements OnInit {
 	}*/
 
 	ngOnInit() {
-		console.log(this.url);
 		this.getID();
 	}
 

@@ -5,19 +5,6 @@ from sqlalchemy import create_engine
 from dateutil.relativedelta import relativedelta
 import json
 
-# load configuration
-with open('../config.json') as json_data_file:
-    data = json.load(json_data_file)
-    db_conn = data["mysql"]["connector"]
-    db_host = data["mysql"]["hostname"]
-    db_port = data["mysql"]["port"]
-    db_user = data["mysql"]["username"]
-    db_pass = data["mysql"]["password"]
-    db_name = data["mysql"]["database"]
-
-engine = create_engine('%s://%s:%s@%s:%s/%s' % (db_conn, db_user, db_pass, db_host, db_port, db_name), pool_pre_ping=True)
-conn = engine.connect()
-
 # change _create type from string to datetime.date
 def str_to_date(_date):
     if _date:
