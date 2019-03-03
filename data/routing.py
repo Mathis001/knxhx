@@ -45,7 +45,7 @@ def get_ll_tuples(workorders):
 def square_distance(x, y):
     return math.sqrt(sum([(xi - yi) ** 2 for xi, yi in zip(x, y)]))
 
-def split_list_half(workorders):
+def split_list_half(workorders, origin):
     ll_tups = get_ll_tuples(valid_wo)
     tup_map = {}
     # get tuple map to get wo obj for lat lon tuple
@@ -91,6 +91,11 @@ def split_list_half(workorders):
     # put the farthest points in as origins for the routes
     routeA.insert(0, max_a)
     routeB.insert(0, max_b)
+    # add origin (depot) as start and end 
+    routeA.insert(0, origin)
+    routeA.insert(len(routeA), origin)
+    routeB.insert(0, origin)
+    routeB.insert(len(routeB), origin)
     return (routeA, routeB)
 
 def get_nearest(origin, tups):
@@ -101,11 +106,10 @@ def get_nearest(origin, tups):
             min_tup = tup
     return min_tup
 
-def get_test_url(depot, waypoints):
-    url = 'https://www.google.com/maps/dir/{}/'.format(depot.pot_loc.format_addr.replace(' ','+'))
+def get_test_url(waypoints):
+    url = 'https://www.google.com/maps/dir'
     for wp in waypoints:
         url = '{}/{}'.format(url,wp.pot_loc.format_addr.replace(' ','+'))
-    url = '{}/{}'.format(url,depot.pot_loc.format_addr.replace(' ', '+'))
     print(url)
 
 def get_optimized_route(route):
@@ -128,23 +132,26 @@ def get_optimized_route(route):
     order = data['routes'][0]['waypoint_order']
     for idx, val in enumerate(order):
         order[idx] = int(val)
-    url = 'https://www.google.com/maps/dir/{}/'.format(origin.pot_loc.format_addr.replace(' ','+'))
+    ordered_wo = [origin]
     for idx in order:
-        url = '{}/{}'.format(url,waypoint_addrs[idx].replace(' ','+'))
-    url = '{}/{}'.format(url,dest.pot_loc.format_addr.replace(' ', '+'))
-    return url
+        ordered_wo.append(route[idx])
+    ordered_wo.append(dest)
+    return ordered_wo
+#    url = 'https://www.google.com/maps/dir/{}/'.format(origin.pot_loc.format_addr.replace(' ','+'))
+#    for idx in order:
+#        url = '{}/{}'.format(url,waypoint_addrs[idx].replace(' ','+'))
+#    url = '{}/{}'.format(url,dest.pot_loc.format_addr.replace(' ', '+'))
+#    return url
 
 valid_wo = get_valid_workorders(sanity_wo)
 
-(route1, route2) = split_list_half(valid_wo)
-#get_test_url(depot, route1)
-#get_test_url(depot, route2)
-route1.insert(0, depot)
-route1.insert(len(route1), depot)
-route2.insert(0, depot)
-route2.insert(len(route2), depot)
-print(get_optimized_route(route1))
-print(get_optimized_route(route2))
+(route1, route2) = split_list_half(valid_wo, depot)
+#get_test_url(route1)
+#get_test_url(route2)
+opt_route1 = get_optimized_route(route1)
+opt_route2 = get_optimized_route(route2)
+get_test_url(opt_route1)
+get_test_url(opt_route2)
 
 origin_wo = depot
 dest_wo = depot
