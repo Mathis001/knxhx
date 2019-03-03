@@ -24,7 +24,25 @@ export class JobsComponent implements OnInit {
     ) {  }
 
   location:any;
-  address = "123 Street Lane";
+  address = "617 Cumberland Ave";
+  city = "Knoxville"
+  state = "TN"
+  zip = "37902"
+  lat = "35.9610544"
+  lon = "-83.9206974"
+
+  url = "https://www.google.com/maps/place/"
+  + this.address.replace(/ /g,"+") + ",+" 
+  + this.city + ",+"
+  + this.state + "+"
+  + this.zip + "/@"
+  + this.lat + ","
+  + this.lon + ",18z"
+
+  addressRedirect() {
+  	this.router.navigate(['/externalRedirect', { externalUrl: this.url }]);
+  }
+
 
 /*    getLocationByID(id) {
         this.apiService.getLocationByID(id).subscribe((locData) => {
@@ -36,6 +54,7 @@ export class JobsComponent implements OnInit {
     }*/
 
   ngOnInit() {
+  	console.log(this.url);
   }
 
 }
