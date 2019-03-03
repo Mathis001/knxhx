@@ -1,9 +1,10 @@
 #!/usr/bin/python
-from flask import jsonify
+from flask import request, jsonify
 from api_functions import query, dictzip
 from sqlalchemy import create_engine
 import post
-from places import *
+from places import get_address
+import json
 
 # load configuration
 with open('../config.json') as json_data_file:
@@ -26,12 +27,12 @@ def postLocationGPS():
     json_form = request.get_json(force=True)
     latitude = json_form['latitude']
     longitude = json_form['longitude']
-    address = places.get_address(latitude, longitude)
+    address = get_address(latitude, longitude)
     full_address = address[0]
     city = address[1]
 
     conn.execute("INSERT INTO location(input_address, full_address, city, latitude, longitude) VALUES (%s,%s,%s,%s,%s)", (full_address, full_address, city, latitude, longitude))
-    currentLocationID = query("SELECT id FROM location WHERE full_address=%s", wo.pot_loc.format_addr)[0]
+    currentLocationID = query("SELECT id FROM location WHERE full_address=%s", address)[0]
     if currentLocationID[0][0]:
         return jsonify({'html':'<span>Location Created</span>','text':'Location created at '+currentLocationID[0][0], 'status':200}), 200
     else:
