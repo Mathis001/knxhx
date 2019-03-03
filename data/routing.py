@@ -45,6 +45,35 @@ def get_ll_tuples(workorders):
 def square_distance(x, y):
     return math.sqrt(sum([(xi - yi) ** 2 for xi, yi in zip(x, y)]))
 
+def get_single_route(workorders, origin):
+    ll_tups = get_ll_tuples(valid_wo)
+    tup_map = {}
+    # get tuple map to get wo obj for lat lon tuple
+    for idx, tup in enumerate(ll_tups):
+        tup_map[tup] = valid_wo[idx]
+    # get farthest point from origin
+    origin_tup = (origin.pot_loc.lat, origin.pot_loc.lng)
+    max_square_distance = 0
+    for tup in ll_tups:
+        if square_distance(origin_tup, tup) > max_square_distance:
+            max_square_distance = square_distance(origin_tup, tup)
+            max_tup = tup
+    max_wo = tup_map[max_tup]
+    ll_tups.remove(max_tup)
+    route = []
+    last_tup = max_tup
+    # keep getting nearest
+    while((len(route) < (MAX_WAYPOINTS - 1))
+            and (len(ll_tups) >= 1)):
+        min_a = get_nearest(last_tup, ll_tups)
+        route.append(tup_map[min_a])
+        ll_tups.remove(min_a)
+        last_tup = min_a
+    route.insert(0, max_wo)
+    route.insert(0, origin)
+    route.insert(len(route), origin)
+    return route
+
 def split_list_half(workorders, origin):
     ll_tups = get_ll_tuples(valid_wo)
     tup_map = {}
@@ -146,12 +175,15 @@ def get_optimized_route(route):
 valid_wo = get_valid_workorders(sanity_wo)
 
 (route1, route2) = split_list_half(valid_wo, depot)
+single_route = get_single_route(valid_wo, depot)
 #get_test_url(route1)
 #get_test_url(route2)
 opt_route1 = get_optimized_route(route1)
 opt_route2 = get_optimized_route(route2)
+opt_single = get_optimized_route(single_route)
 get_test_url(opt_route1)
 get_test_url(opt_route2)
+get_test_url(opt_single)
 
 origin_wo = depot
 dest_wo = depot
