@@ -224,6 +224,10 @@ def get_sanity_offline_data():
             except EOFError:
                 break
 
+def get_address(lat, lng):
+    location = PotholeLocation.make_latlng(lat, lng)
+    return(location.format_addr, location.addr_comp[2]['short_name'])
+
 def main():
     #get_online_data()
 
