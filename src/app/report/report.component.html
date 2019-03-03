@@ -19,7 +19,7 @@
         <br>
         <div style="float:right">
             <button mat-button  *ngIf="!isOptional" matStepperNext>Skip</button>
-            <button mat-button *ngIf="isOptional"matStepperNext>Next</button>
+            <button mat-button *ngIf="isOptional" matStepperNext>Next</button>
         </div>
       </form>
     </mat-step>
@@ -43,8 +43,7 @@
       <br>
       <div style="float:right">
         <button mat-button matStepperPrevious>Back</button>
-<!--         <button mat-button (click)="stepper.reset(); isOptional = false;">Reset</button> -->
-        <button mat-button>Submit</button>
+        <button mat-button (click)="submit()">Submit</button>
       </div>
     </mat-step>
   </mat-vertical-stepper>

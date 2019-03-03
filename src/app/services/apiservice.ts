@@ -10,11 +10,14 @@ export class APIService {
 
     constructor(private httpClient: HttpClient) { }
 
-
-
-    postAdmin(adminData): Observable<any> {
-        return this.httpClient.post(this.apiUrl+'app/admin/post', adminData, {})
+    postGPS(data): Observable<any> {
+        return this.httpClient.post(this.apiUrl+'location/post/gps', data, {})
     }
+
+    postLocation(data): Observable<any> {
+        return this.httpClient.post(this.apiUrl+'location/post/address', data, {})
+    }
+}
 
 /*
     getAllSystems(): Observable<any> {
@@ -92,6 +95,6 @@ export class APIService {
     }
     getEmployeeLogin(login): Observable<any> {
         return this.httpClient.get(this.apiUrl+'employee/login/' + login, {});
-    }*/
+    }
 
-}
+    */

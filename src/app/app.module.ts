@@ -108,6 +108,7 @@ import {
     ],
   providers: [
   LoadingBar,
+  APIService,
   ],
   bootstrap: [AppComponent]
 })

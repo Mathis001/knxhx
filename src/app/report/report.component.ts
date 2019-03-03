@@ -7,6 +7,7 @@ import { Observable } from 'rxjs/Rx';
 import { map, startWith} from 'rxjs/operators';
 import { Routes, RouterModule, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material';
+import { APIService } from '../services/apiservice';
 
 @Component({
   selector: 'app-report',
@@ -19,8 +20,14 @@ export class ReportComponent implements OnInit {
     isOptional = false;
     gpsLocFormGroup: FormGroup;
     addressLocFormGroup: FormGroup;
+    data:any;
 
-    constructor(private _formBuilder: FormBuilder) {}
+    constructor(
+        private _formBuilder: FormBuilder,
+        private apiService: APIService,
+        private router: Router,
+        public snackBar: MatSnackBar,
+    ) {}
 
     getCoords() {
         if(window.navigator.geolocation){
@@ -32,6 +39,27 @@ export class ReportComponent implements OnInit {
                 this.gpsLocFormGroup.markAsTouched();
             });
         }
+    }
+
+    submit() {
+        this.data = {};
+        if (this.gpsLocFormGroup.get('gpsLocCtrl').value) {
+            this.data.latitude = this.gpsLocFormGroup.get('gpsLocCtrl').value.split(',', 1)[0];
+            this.data.longitude = this.gpsLocFormGroup.get('gpsLocCtrl').value.split(' ', 2)[1];
+            // console.log(this.data);
+            this.apiService.postGPS(this.data).subscribe((returnData) => {
+                this.snackBar.open('submitted!', '', {duration: 2000});
+                this.router.navigate(['./home']);
+            });
+        } else if (this.addressLocFormGroup.get('addressLocCtrl').value) {
+            this.data.address = this.addressLocFormGroup.get('addressLocCtrl').value;
+            // console.log(this.data);
+            this.apiService.postLocation(this.data).subscribe((returnData) => {
+                this.snackBar.open('submitted!', '', {duration: 2000});
+                this.router.navigate(['./home']);
+            });
+        }
+
     }
 
     ngOnInit() {
