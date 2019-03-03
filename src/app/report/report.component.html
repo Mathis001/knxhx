@@ -9,21 +9,18 @@
   <mat-vertical-stepper [linear]="isLinear" #stepper>
     <mat-step [stepControl]="gpsLocFormGroup" [optional]="!isOptional">
       <form [formGroup]="gpsLocFormGroup">
-
         <ng-template matStepLabel>Use GPS</ng-template>
-
         <mat-form-field class="col-md-12">
           <input matInput placeholder="GPS Coordinates" aria-label="GPS Coordinates" formControlName="gpsLocCtrl" matInput [required]="isOptional">
           <div *ngIf="!isOptional">
             <button mat-icon-button matSuffix aria-label="Get GPS Location" matTooltip="Get GPS Location" [matTooltipShowDelay]="1000" (click)="getCoords()" style="float:right"><mat-icon>gps_not_fixed</mat-icon></button>
           </div>
         </mat-form-field>
-
+        <br>
         <div style="float:right">
             <button mat-button  *ngIf="!isOptional" matStepperNext>Skip</button>
             <button mat-button *ngIf="isOptional"matStepperNext>Next</button>
         </div>
-
       </form>
     </mat-step>
 
@@ -31,11 +28,10 @@
       <form [formGroup]="addressLocFormGroup">
         <ng-template matStepLabel>Enter Address</ng-template>
         <mat-form-field class="col-md-12">
-          <input type="text" placeholder="Address" aria-label="System Serial (Node #2)" [formControl]="addressControl" matInput [required]="!isOptional">
-          <mat-error *ngIf="addressControl.hasError('required')">Please enter an address</mat-error>
-          <mat-hint>{{addressControl.value?.sound}}</mat-hint>
+          <input type="text" placeholder="Address" aria-label="Address" formControlName="addressLocCtrl" matInput [required]="!isOptional">
         </mat-form-field>
-        <div  style="float:right">
+        <br>
+        <div style="float:right">
           <button mat-button matStepperPrevious>Back</button>
           <button mat-button *ngIf="!isOptional" matStepperNext>Next</button>
           <button mat-button *ngIf="isOptional" matStepperNext>Skip</button>
@@ -43,11 +39,13 @@
       </form>
     </mat-step>
     <mat-step>
-      <ng-template matStepLabel>Done</ng-template>
+      <ng-template matStepLabel>Review</ng-template>
       You are now done.
+      <br>
       <div style="float:right">
         <button mat-button matStepperPrevious>Back</button>
-        <button mat-button (click)="stepper.reset()">Reset</button>
+        <button mat-button (click)="stepper.reset(); isOptional = false;">Reset</button>
+        <button mat-button>Submit</button>
       </div>
     </mat-step>
   </mat-vertical-stepper>

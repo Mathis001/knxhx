@@ -15,12 +15,6 @@ import { MatSnackBar } from '@angular/material';
 })
 export class ReportComponent implements OnInit {
 
-    lat:any;
-    lon:any;
-
-    addressControl = new FormControl('', [Validators.required]);
-    gpsControl = new FormControl('', [Validators.required]);
-
     isLinear = true;
     isOptional = false;
     gpsLocFormGroup: FormGroup;
@@ -31,11 +25,9 @@ export class ReportComponent implements OnInit {
     getCoords() {
         if(window.navigator.geolocation){
             navigator.geolocation.getCurrentPosition((position) => {
-                this.lat = position.coords.latitude;
-                this.lon = position.coords.longitude;
                 this.isOptional = !this.isOptional;
                 this.gpsLocFormGroup.setValue({
-                    gpsLocCtrl: (this.lat+ ", " + this.lon), 
+                    gpsLocCtrl: (position.coords.latitude + ", " + position.coords.longitude), 
                 });
                 this.gpsLocFormGroup.markAsTouched();
             });
