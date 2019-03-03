@@ -27,10 +27,9 @@ CREATE TABLE IF NOT EXISTS `status`(
 
 CREATE TABLE IF NOT EXISTS `location`(
 	`id` INT NOT NULL AUTO_INCREMENT,
-	`street_number` VARCHAR(255) NOT NULL,
-	`street_name` VARCHAR(255) NOT NULL,
+    `input_address` VARCHAR(255) NOT NULL,
+    `full_address` VARCHAR(255) NOT NULL,
 	`city` VARCHAR(255) NOT NULL,
-	`state` VARCHAR(255) NOT NULL,
 	`latitude` VARCHAR(255) DEFAULT '',
 	`longitude` VARCHAR(255) DEFAULT '',
 	PRIMARY KEY (`id`)
@@ -70,15 +69,6 @@ CREATE TABLE IF NOT EXISTS `reported` (
 	FOREIGN KEY (`priority_id`) REFERENCES priority(`id`)
 	);
 
-/*CREATE TABLE jobs*/
-CREATE TABLE IF NOT EXISTS `jobs` (
-    `id` INT NOT NULL AUTO_INCREMENT,
-    `workorder_id` INT NOT NULL,
-    `truck_id` INT NOT NULL,
-    PRIMARY KEY (`id`),
-    FOREIGN KEY (`workorder_id`) REFERENCES workorders(`id`),
-    FOREIGN KEY (`truck_id`) REFERENCES trucks(`id`)
-
 /*CREATE TABLE trucks*/
 CREATE TABLE IF NOT EXISTS `trucks` (
     `id` INT NOT NULL AUTO_INCREMENT,
@@ -93,6 +83,16 @@ CREATE TABLE IF NOT EXISTS `workorders` (
 	`w_o` VARCHAR(255) NOT NULL,
     PRIMARY KEY (`id`)
 	);
+
+/*CREATE TABLE jobs*/
+CREATE TABLE IF NOT EXISTS `jobs` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `workorder_id` INT NOT NULL,
+    `truck_id` INT NOT NULL,
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`workorder_id`) REFERENCES workorders(`id`),
+    FOREIGN KEY (`truck_id`) REFERENCES trucks(`id`)
+    );
 
 /*CREATE TABLE authlvl*/
 CREATE TABLE IF NOT EXISTS `authlvl` (
