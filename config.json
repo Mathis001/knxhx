@@ -5,7 +5,7 @@
         "hostname":"localhost",
         "username":"keyserver",
         "password":"keyserver",
-        "database":"keyserver",
+        "database":"potholes",
         "port":"3306"
     },
     "api":{
