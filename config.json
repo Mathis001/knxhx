@@ -3,8 +3,8 @@
         "connector":"mysql",
         "ipaddr":"127.0.0.1",
         "hostname":"localhost",
-        "username":"keyserver",
-        "password":"keyserver",
+        "username":"knoxpotholes",
+        "password":"knoxpotholes",
         "database":"potholes",
         "port":"3306"
     },

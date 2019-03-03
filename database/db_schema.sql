@@ -2,7 +2,6 @@
 
 CREATE DATABASE IF NOT EXISTS `potholes`;
 
-
 /*Set Database*/
 
 USE potholes;
@@ -11,8 +10,8 @@ USE potholes;
 
 CREATE TABLE IF NOT EXISTS `zone`(
 	`id` INT NOT NULL AUTO_INCREMENT,
-	`zone_number` VARCHAR(255) NOT NULL,
-	`zone_notes` VARCHAR(255) NOT NULL,
+	`zone_number` INT NOT NULL,
+	`zone_notes` VARCHAR(255) DEFAULT '',
 	PRIMARY KEY (`id`)
 	);
 
@@ -68,7 +67,7 @@ CREATE TABLE IF NOT EXISTS `reported` (
 	FOREIGN KEY (`status_id`) REFERENCES status(`id`),
 	FOREIGN KEY (`zone_id`) REFERENCES zone(`id`),
 	FOREIGN KEY (`reporter_id`) REFERENCES reporter(`id`),
-	FOREIGN KEY (`priority_id`) REFERENCES reporter(`id`)
+	FOREIGN KEY (`priority_id`) REFERENCES priority(`id`)
 	);
 
 /*CREATE TABLE work orders*/
@@ -76,14 +75,14 @@ CREATE TABLE IF NOT EXISTS `workorders` (
 	`id` INT NOT NULL AUTO_INCREMENT,
 	`request_id` INT NOT NULL,
 	`w_o` VARCHAR(255) NOT NULL,
+    PRIMARY KEY (`id`)
 	);
 
 /*CREATE TABLE authlvl*/
 CREATE TABLE IF NOT EXISTS `authlvl` (
 	`id` INT NOT NULL AUTO_INCREMENT,
 	`auth_name` VARCHAR(255) NOT NULL,
-	PRIMARY KEY (`id`),
-
+	PRIMARY KEY (`id`)
 	);
 
 /*CREATE TABLE user*/
@@ -94,5 +93,5 @@ CREATE TABLE IF NOT EXISTS `user` (
 	`api_token` VARCHAR(255) NOT NULL,
 	`auth` INT NOT NULL,
 	PRIMARY KEY (`id`),
-	FOREIGN KEY (`auth`) REFERENCES authlvl(`id`),
+	FOREIGN KEY (`auth`) REFERENCES authlvl(`id`)
 	);
