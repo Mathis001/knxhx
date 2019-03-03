@@ -46,11 +46,11 @@ def square_distance(x, y):
     return math.sqrt(sum([(xi - yi) ** 2 for xi, yi in zip(x, y)]))
 
 def get_single_route(workorders, origin):
-    ll_tups = get_ll_tuples(valid_wo)
+    ll_tups = get_ll_tuples(workorders)
     tup_map = {}
     # get tuple map to get wo obj for lat lon tuple
     for idx, tup in enumerate(ll_tups):
-        tup_map[tup] = valid_wo[idx]
+        tup_map[tup] = workorders[idx]
     # get farthest point from origin
     origin_tup = (origin.pot_loc.lat, origin.pot_loc.lng)
     max_square_distance = 0
@@ -75,11 +75,11 @@ def get_single_route(workorders, origin):
     return route
 
 def split_list_half(workorders, origin):
-    ll_tups = get_ll_tuples(valid_wo)
+    ll_tups = get_ll_tuples(workorders)
     tup_map = {}
     # get tuple map to get wo obj for lat lon tuple
     for idx, tup in enumerate(ll_tups):
-        tup_map[tup] = valid_wo[idx]
+        tup_map[tup] = workorders[idx]
     # get two furthest points
     max_square_distance = 0
     for pair in combinations(ll_tups, 2):
