@@ -10,10 +10,10 @@
     <mat-step [stepControl]="gpsLocFormGroup" [optional]="!isOptional">
       <form [formGroup]="gpsLocFormGroup">
         <ng-template matStepLabel>Use GPS</ng-template>
-        <mat-form-field class="col-md-12">
+        <mat-form-field class="col-md-12 full-width">
           <input matInput placeholder="GPS Coordinates" aria-label="GPS Coordinates" formControlName="gpsLocCtrl" matInput [required]="isOptional">
           <div *ngIf="!isOptional">
-            <button mat-icon-button matSuffix aria-label="Get GPS Location" matTooltip="Get GPS Location" [matTooltipShowDelay]="1000" (click)="getCoords()" style="float:right"><mat-icon>gps_not_fixed</mat-icon></button>
+            <button mat-icon-button matSuffix aria-label="Get GPS Location" matTooltip="Get GPS Location" [matTooltipShowDelay]="1000" (click)="getCoords()" style="float:right"><mat-icon>gps_fixed</mat-icon></button>
           </div>
         </mat-form-field>
         <br>
@@ -27,14 +27,13 @@
     <mat-step [stepControl]="addressLocFormGroup" [optional]="isOptional">
       <form [formGroup]="addressLocFormGroup">
         <ng-template matStepLabel>Enter Address</ng-template>
-        <mat-form-field class="col-md-12">
+        <mat-form-field class="col-md-12 full-width">
           <input type="text" placeholder="Address" aria-label="Address" formControlName="addressLocCtrl" matInput [required]="!isOptional">
         </mat-form-field>
         <br>
         <div style="float:right">
           <button mat-button matStepperPrevious>Back</button>
-          <button mat-button *ngIf="!isOptional" matStepperNext>Next</button>
-          <button mat-button *ngIf="isOptional" matStepperNext>Skip</button>
+          <button mat-button matStepperNext>Next</button>
         </div>
       </form>
     </mat-step>
@@ -44,7 +43,7 @@
       <br>
       <div style="float:right">
         <button mat-button matStepperPrevious>Back</button>
-        <button mat-button (click)="stepper.reset(); isOptional = false;">Reset</button>
+<!--         <button mat-button (click)="stepper.reset(); isOptional = false;">Reset</button> -->
         <button mat-button>Submit</button>
       </div>
     </mat-step>

@@ -1,0 +1,49 @@
+a {
+    font-size: 2em;
+}
+
+::ng-deep .mat-icon{
+    height:36px !important;
+    width:36px !important;
+    font-size:36px !important;
+}
+
+.my-fab {
+    width: 50px;
+    height: 50px;
+    line-height: 48px;
+    font-size: 48px;
+
+    &::ng-deep .mat-button-wrapper{
+        line-height: 48px;
+        padding: 0;
+
+        .mat-icon {
+            width: 50px;
+    		height: 50px;
+    		line-height: 48px;
+            padding-right: 4px;
+            padding-top: 4px;
+        }
+    }
+}
+
+.full-width {
+  width: 100%;
+  padding: 1.5% 3% 1.5% 3%;
+}
+
+.half-width {
+  width: 50%;
+  padding: 1.5% 3% 1.5% 3%;
+}
+
+.third-width {
+  width: 33.3%;
+  padding: 1.5% 3% 1.5% 3%;
+}
+
+.fourth-width {
+  width: 25%;
+  padding: 1.5% 3% 1.5% 3%;
+}

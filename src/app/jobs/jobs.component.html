@@ -1,9 +1,40 @@
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
 <div class="container">
 
 	<div class="page-header">
-		<h1>Jobs</h1>
+		<h1>{{id}} {{address}}</h1>
+		<button mat-icon-button mat-fab class="my-fab" aria-label="Get GPS Location" matTooltip="Get GPS Location" [matTooltipShowDelay]="1000" (click)="addressRedirect()" style="float: right;"><mat-icon>map</mat-icon></button>
 	</div>
 
-	<a href="{{url}}" target="_blank">{{address}}</a>
+  	<br />
+  	<br />
+  	<br />
+
+	<mat-form-field class="col-md-12 full-width">
+        <mat-select placeholder="Status" aria-label="Status" required>
+        	<mat-option value="Needs Additional Work">Needs Additional Work</mat-option>
+        	<mat-option value="Completed">Completed</mat-option>
+      	</mat-select>
+    </mat-form-field>
+
+    <h3>Notes</h3>
+
+  	<mat-form-field class="col-md-12 full-width" appearance="outline">
+    	<textarea matInput #note maxlength="4000" aria-label="Notes" [formControl]="noteControl"></textarea>
+    	<mat-hint align="end"><br />{{note.value.length}} / 4000</mat-hint>
+    	<mat-hint>{{noteControl.value?.sound}}</mat-hint>
+  	</mat-form-field>
+
+  	<br />
+  	<br />
+  	<br />
+
+  	<button class="btn btn-primary" style="float: right;" (click)="post()">Submit</button>
+
+    <br />
+  	<br />
+
 
 </div>
