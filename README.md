@@ -2,6 +2,8 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.0.3.
 
+The API key credential has been deleted to avoid quota theft. Please fork and provide your own key if you'd like to use this. Thanks!
+
 ## Requirements
 
 - Install Python3, Python3 pip (pip3), Angular, and MySQL.
